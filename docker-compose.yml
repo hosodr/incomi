@@ -4,6 +4,8 @@ services:
         container_name: db_container
         build: ./mysql
         image: db_image
+        volumes: 
+            - mysql_data:/var/lib/mysql
     back:
         build: rails_app
         command: bash -c "bundle install;rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -18,5 +20,6 @@ services:
             - db
 volumes: 
     gem_data:
+    mysql_data:
 
 
