@@ -8,7 +8,7 @@ services:
             - mysql_data:/var/lib/mysql
     back:
         build: rails_app
-        command: bash -c "bundle install;rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+        command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
         image: app_image
         container_name: app_container
         ports: 
