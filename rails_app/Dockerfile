@@ -25,4 +25,6 @@ COPY ./Gemfile.lock $APP_HOME/Gemfile.lock
 RUN bundle install
 COPY . $APP_HOME
 
+ENTRYPOINT ["prehook", "bundle install", "--"]
+
 EXPOSE  3000
