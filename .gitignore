@@ -15,3 +15,11 @@ rails_app/tmp/*
 
 # Ignore Byebug command history file.
 rails_app/.byebug_history
+
+.DS_Store
+.idea
+
+# direnv config file.
+.envrc
+
+./nuxt/src/app/node_modules

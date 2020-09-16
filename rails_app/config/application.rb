@@ -13,3 +13,13 @@ module RailsApp
     # -- all .rb files in that directory are automatically loaded.
   end
 end
+
+# # Permit cross origin
+# config.middleware.insert_before 0, Rack::Cors do
+#   allow do
+#     origins "*"
+#     resource "*",
+#       headers: :any,
+#       methods: [:get, :post, :options, :head]
+#   end
+# end
