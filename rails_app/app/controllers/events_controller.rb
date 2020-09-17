@@ -69,6 +69,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:channel_id, :host-user_id, :name, :abstract, :zoom_url, :datetime, :fromdate, :todate, :delete_flag)
+      params.require(:event).permit(:channel_id, :host_user_id, :name, :abstract, :zoom_url, :datetime, :fromdate, :todate, :delete_flag)
     end
 end
