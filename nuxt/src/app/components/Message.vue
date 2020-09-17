@@ -27,13 +27,19 @@
 
 <script>
 export default {
-  props: { message: Object, parentThId: Number, getThread: Function },
+  props: {
+    message: Object,
+    parentThId: Number,
+    getThread: Function,
+    showThread: Function,
+  },
   data: () => {
     return {}
   },
   methods: {
     goThread() {
       this.getThread(this.parentThId, this.message.cmId)
+      this.showThread()
     },
   },
 }
