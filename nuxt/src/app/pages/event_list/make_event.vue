@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-2">
       <h1>Create a new event</h1>
     </div>
     <form>
