@@ -12,3 +12,5 @@ channel1 = Channel.create!(name:"Machine Learning", abstract:'for beginner')
 event1 = Event.create!(channel_id:1,host_user_id:1 ,name:'GAN')
 
 comment1 = Comment.create!(user_id:1, channel_id:1)
+
+participation1 = Participation.create!(user_id:1,event_id:1)
