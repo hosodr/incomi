@@ -22,14 +22,14 @@
     <% @events.each do |event| %>
       <tr>
         <td><%= event.channel %></td>
-        <td><%= event.host-user %></td>
+        <td><%= event.host_user %></td>
         <td><%= event.name %></td>
         <td><%= event.abstract %></td>
-        <td><%= event.zoom-url %></td>
+        <td><%= event.zoom_url %></td>
         <td><%= event.datetime %></td>
         <td><%= event.fromdate %></td>
         <td><%= event.todate %></td>
-        <td><%= event.delete-flag %></td>
+        <td><%= event.delete_flag %></td>
         <td><%= link_to 'Show', event %></td>
         <td><%= link_to 'Edit', edit_event_path(event) %></td>
         <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
