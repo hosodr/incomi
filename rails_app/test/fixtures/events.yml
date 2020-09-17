@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  channel: one
+  name: MyString
+  abstract: MyText
+  zoom_url: MyText
+  date: 2020-09-17 07:38:44
+  fromdate: 2020-09-17 07:38:44
+  todate: 2020-09-17 07:38:44
+  delete_flag: false
+
+two:
+  channel: two
+  name: MyString
+  abstract: MyText
+  zoom_url: MyText
+  date: 2020-09-17 07:38:44
+  fromdate: 2020-09-17 07:38:44
+  todate: 2020-09-17 07:38:44
+  delete_flag: false
