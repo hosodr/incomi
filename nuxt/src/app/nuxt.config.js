@@ -63,14 +63,14 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    proxy: true
+    proxy: true,
   },
 
   proxy: {
     '/api/': {
       target: 'http://back:3000',
-      pathRewrite: {'^/api/': ''},
-    }
+      pathRewrite: { '^/api/': '' },
+    },
   },
   /*
    ** Build configuration
