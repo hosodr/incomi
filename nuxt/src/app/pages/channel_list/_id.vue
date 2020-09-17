@@ -1,84 +1,96 @@
 <template>
   <div class="container">
-    <div class="row my-5">
-      <h4 class="col-auto mr-auto">{{ thread.name }}</h4>
-      <div class="col-auto">
-        <button
-          v-if="registar"
-          type="button"
-          class="btn btn-primary col-auto"
-          @click="registar = !registar"
-        >
-          登録<b-icon-suit-heart />
-        </button>
-        <button
-          v-else
-          type="button"
-          class="btn btn-primary"
-          @click="registar = !registar"
-        >
-          登録解除<b-icon-suit-heart-fill />
-        </button>
-        <nuxt-link class="btn btn-primary" to="/event_list/make_event"
-          >イベントを作成</nuxt-link
-        >
-        <nuxt-link class="btn btn-primary" to="/event_list"
-          >イベント一覧</nuxt-link
-        >
-      </div>
-    </div>
-
-    <div class="row">
-      <ul class="col-9 list-group height-fixed scroll">
-        <template v-for="(message, key) in messages">
-          <Message
-            :key="key"
-            :message="message"
-            :parent-th-id="thread.parentThId"
-            :get-thread="getThread"
-          />
-        </template>
-      </ul>
-
-      <ul v-if="isThread" class="col-3 list-group height-fixed scroll">
-        <h4>{{ childThread.name }}</h4>
-        <template v-for="(message, key) in childMessages">
-          <Message
-            :key="key"
-            :message="message"
-            :parent-th-id="childThread.parentThId"
-            :get-thread="getThread"
-          />
-        </template>
-      </ul>
-    </div>
-
-    <div class="row">
-      <ul class="col-9 list-group">
-        <form class="form-group">
-          <textarea class="form-control float-left" rows="1" />
-          <button
-            type="button"
-            class="btn text-primary float-right align-items-end"
-          >
-            <b-icon-cursor />
-          </button>
-        </form>
-      </ul>
-
-      <ul v-if="isThread" class="col-3 list-group">
-        <form>
-          <div class="form-group">
-            <textarea class="form-control float-left" rows="1"></textarea>
+    <div class="row mt-5">
+      <div class="col-9">
+        <div class="row">
+          <h4 class="col-auto mr-auto">{{ thread.name }}</h4>
+          <div class="col-auto">
+            <button
+              v-if="registar"
+              type="button"
+              class="btn btn-primary col-auto"
+              @click="registar = !registar"
+            >
+              登録<b-icon-suit-heart />
+            </button>
+            <button
+              v-else
+              type="button"
+              class="btn btn-primary"
+              @click="registar = !registar"
+            >
+              登録解除<b-icon-suit-heart-fill />
+            </button>
+            <nuxt-link class="btn btn-primary" to="/event_list/make_event"
+              >イベントを作成</nuxt-link
+            >
+            <nuxt-link class="btn btn-primary" to="/event_list"
+              >イベント一覧</nuxt-link
+            >
           </div>
-          <button
-            type="button"
-            class="btn text-primary float-right align-items-end"
-          >
-            <b-icon-cursor />
-          </button>
-        </form>
-      </ul>
+        </div>
+        <div class="row">
+          <ul class="col list-group height-fixed scroll">
+            <template v-for="(message, key) in messages">
+              <Message
+                :key="key"
+                :message="message"
+                :parent-th-id="thread.parentThId"
+                :get-thread="getThread"
+              />
+            </template>
+          </ul>
+        </div>
+        <div class="row">
+          <ul class="col list-group">
+            <form class="form-group">
+              <div class="input-group mb-3">
+                <textarea
+                  class="form-control"
+                  placeholder="add comment"
+                ></textarea>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button">
+                    <b-icon-cursor />
+                  </button>
+                </div>
+              </div>
+            </form>
+          </ul>
+        </div>
+      </div>
+      <div v-if="isThread" class="col">
+        <div class="row">
+          <h5>{{ childThread.name }}</h5>
+        </div>
+        <div class="row">
+          <ul v-if="isThread" class="col list-group height-fixed scroll">
+            <template v-for="(message, key) in childMessages">
+              <Message
+                :key="key"
+                :message="message"
+                :parent-th-id="childThread.parentThId"
+                :get-thread="getThread"
+              />
+            </template>
+          </ul>
+        </div>
+        <div class="row">
+          <form class="form-group">
+            <div class="input-group mb-3">
+              <textarea
+                class="form-control"
+                placeholder="add comment"
+              ></textarea>
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="button">
+                  <b-icon-cursor />
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>

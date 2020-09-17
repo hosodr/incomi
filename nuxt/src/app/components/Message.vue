@@ -5,12 +5,12 @@
         {{ message.timestamp }}
       </h6>
       <div class="row">
-        <div class="col">
+        <div class="col-10 pr-0">
           <p class="card-text">
             {{ message.msg }}
           </p>
         </div>
-        <div class="col">
+        <div class="col-2 px-0">
           <button
             v-if="parentThId === null"
             type="button"
