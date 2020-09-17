@@ -1,33 +1,35 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <button
-        v-if="registar"
-        type="button"
-        class="btn btn-primary"
-        @click="registar = !registar"
-      >
-        登録<b-icon-suit-heart />
-      </button>
-      <button
-        v-else
-        type="button"
-        class="btn btn-primary"
-        @click="registar = !registar"
-      >
-        登録解除<b-icon-suit-heart-fill />
-      </button>
-      <nuxt-link class="btn btn-primary" to="/event_list/make_event"
-        >イベントを作成</nuxt-link
-      >
-      <nuxt-link class="btn btn-primary" to="/event_list"
-        >イベント一覧</nuxt-link
-      >
+    <div class="row my-5">
+      <h4 class="col-auto mr-auto">{{ thread.name }}</h4>
+      <div class="col-auto">
+        <button
+          v-if="registar"
+          type="button"
+          class="btn btn-primary col-auto"
+          @click="registar = !registar"
+        >
+          登録<b-icon-suit-heart />
+        </button>
+        <button
+          v-else
+          type="button"
+          class="btn btn-primary"
+          @click="registar = !registar"
+        >
+          登録解除<b-icon-suit-heart-fill />
+        </button>
+        <nuxt-link class="btn btn-primary" to="/event_list/make_event"
+          >イベントを作成</nuxt-link
+        >
+        <nuxt-link class="btn btn-primary" to="/event_list"
+          >イベント一覧</nuxt-link
+        >
+      </div>
     </div>
 
-    <div class="row justify-content-center">
-      <ul class="col-9 list-group col">
-        <h1>{{ thread.name }}</h1>
+    <div class="row">
+      <ul class="col-9 list-group height-fixed scroll">
         <template v-for="(message, key) in messages">
           <Message
             :key="key"
@@ -36,16 +38,9 @@
             :get-thread="getThread"
           />
         </template>
-        <form>
-          <div class="form-group">
-            <label for="exampleFormControlTextarea1">Example textarea</label>
-            <textarea class="form-control" rows="3"></textarea>
-          </div>
-          <button type="button" class="btn btn-primary">送信</button>
-        </form>
       </ul>
 
-      <ul v-if="isThread" class="col-3 list-group col">
+      <ul v-if="isThread" class="col-3 list-group height-fixed scroll">
         <h4>{{ childThread.name }}</h4>
         <template v-for="(message, key) in childMessages">
           <Message
@@ -55,12 +50,33 @@
             :get-thread="getThread"
           />
         </template>
+      </ul>
+    </div>
+
+    <div class="row">
+      <ul class="col-9 list-group">
+        <form class="form-group">
+          <textarea class="form-control float-left" rows="1" />
+          <button
+            type="button"
+            class="btn text-primary float-right align-items-end"
+          >
+            <b-icon-cursor />
+          </button>
+        </form>
+      </ul>
+
+      <ul v-if="isThread" class="col-3 list-group">
         <form>
           <div class="form-group">
-            <label for="exampleFormControlTextarea1">Example textarea</label>
-            <textarea class="form-control" rows="3"></textarea>
+            <textarea class="form-control float-left" rows="1"></textarea>
           </div>
-          <button type="button" class="btn btn-primary">送信</button>
+          <button
+            type="button"
+            class="btn text-primary float-right align-items-end"
+          >
+            <b-icon-cursor />
+          </button>
         </form>
       </ul>
     </div>
@@ -68,11 +84,12 @@
 </template>
 
 <script>
-import { BIconSuitHeart, BIconSuitHeartFill } from 'bootstrap-vue'
+import { BIconSuitHeart, BIconSuitHeartFill, BIconCursor } from 'bootstrap-vue'
 export default {
   components: {
     BIconSuitHeart,
     BIconSuitHeartFill,
+    BIconCursor,
   },
   data: () => {
     const date = new Date().toDateString()
@@ -87,6 +104,11 @@ export default {
       },
 
       messages: [
+        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
         { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
         { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
         { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
@@ -118,12 +140,14 @@ export default {
         { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
         { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
         { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
+        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
       ]
       this.childThread = thread
       this.childMessages = message
-    },
-    hoge() {
-      console.log(this.childMessages, this.childThread)
     },
   },
 }
@@ -135,6 +159,6 @@ export default {
 }
 
 .height-fixed {
-  height: 95vh;
+  height: 70vh;
 }
 </style>
