@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  parent_channel: one
+  parent_comment: 
+  name: MyString
+  abstract: MyText
+
+two:
+  parent_channel: two
+  parent_comment: 
+  name: MyString
+  abstract: MyText

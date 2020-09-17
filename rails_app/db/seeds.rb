@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+
+#user1 = User.create(id:1 , name:'taro', email:'hoge@mail.com', password_digest:'aaa')
+
+event1 = Event.create!(id:1, channel_id:1, host_user_id:1, name:'hoge',)
+
+channel1 = Channel.create!(id:1, name:"fuga")
+
+comment1 = Comment.crate!(id:1, user_id:1)

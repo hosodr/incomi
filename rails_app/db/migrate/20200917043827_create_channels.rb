@@ -1,0 +1,12 @@
+class CreateChannels < ActiveRecord::Migration[5.0]
+  def change
+    create_table :channels do |t|
+      t.references :parent_channel, foreign_key: { to_table: :channels }
+      #t.references :parent_comment
+      t.string :name
+      t.text :abstract
+
+      t.timestamps
+    end
+  end
+end

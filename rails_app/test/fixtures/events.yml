@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  thread: one
+  host_user: one
+  name: MyString
+  abstract: MyText
+  zoom_url: MyText
+  datetime: 2020-09-17 04:24:31
+  fromdate: 2020-09-17 04:24:31
+  todate: 2020-09-17 04:24:31
+  delete_flag: false
+
+two:
+  thread: two
+  host_user: two
+  name: MyString
+  abstract: MyText
+  zoom_url: MyText
+  datetime: 2020-09-17 04:24:31
+  fromdate: 2020-09-17 04:24:31
+  todate: 2020-09-17 04:24:31
+  delete_flag: false
