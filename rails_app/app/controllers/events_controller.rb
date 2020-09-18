@@ -1,3 +1,7 @@
+require 'net/https'
+require 'net/http'
+require 'uri'
+require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
