@@ -1,27 +1,34 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <h1>Channel list</h1>
+      <h1>Channels</h1>
     </div>
-    <form class="form-inline my-2 my-lg-0">
-      <input
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Search"
-        aria-label="Search"
-      />
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-        Search
-      </button>
-    </form>
     <div class="row">
-      <nuxt-link class="btn btn-primary" to="/channel_list/make_channel" nuxt>
-        チャンネル作成
-      </nuxt-link>
+      <form class="form-inline col-sm-7 my-2 my-lg-0">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          Search
+        </button>
+      </form>
+      <div class="col-sm-2"></div>
+      <div class="col-sm-3">
+        <nuxt-link
+          class="btn btn-primary my-2"
+          to="/channel_list/make_channel"
+          nuxt
+        >
+          Create Channel
+        </nuxt-link>
+      </div>
     </div>
     <div class="list-group">
       <template v-for="channel in channels">
-        <ChannelItem :channel="channel" :key="channel.id" />
+        <ChannelItem :key="channel.id" :channel="channel" />
       </template>
     </div>
   </div>

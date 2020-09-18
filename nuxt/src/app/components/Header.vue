@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="info">
+  <b-navbar class="mb-2" toggleable="lg" type="dark" variant="info">
     <b-navbar-brand to="/" nuxt>インコミ</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
