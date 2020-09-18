@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Channel:</strong>
+  <%= @event.channel %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @event.name %>
+</p>
+
+<p>
+  <strong>Abstract:</strong>
+  <%= @event.abstract %>
+</p>
+
+<p>
+  <strong>Zoom url:</strong>
+  <%= @event.zoom_url %>
+</p>
+
+<p>
+  <strong>Host date:</strong>
+  <%= @event.host_date %>
+</p>
+
+<p>
+  <strong>From date:</strong>
+  <%= @event.from_date %>
+</p>
+
+<p>
+  <strong>To date:</strong>
+  <%= @event.to_date %>
+</p>
+
+<p>
+  <strong>Is delete:</strong>
+  <%= @event.is_delete %>
+</p>
+
+<%= link_to 'Edit', edit_event_path(@event) %> |
+<%= link_to 'Back', events_path %>
