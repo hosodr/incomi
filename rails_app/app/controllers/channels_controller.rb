@@ -24,18 +24,17 @@ class ChannelsController < ApplicationController
   # POST /channels
   # POST /channels.json
   def create
-    # @channel = Channel.new(channel_params)
-    logger.debug(params)
+    @channel = Channel.new(channel_params)
 
-    # respond_to do |format|
-    #   if @channel.save
-    #     format.html { redirect_to @channel, notice: 'Channel was successfully created.' }
-    #     format.json { render :show, status: :created, location: @channel, params: params }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @channel.errors, status: :unprocessable_entity }
-    #   end
-    # end
+    respond_to do |format|
+      if @channel.save
+        format.html { redirect_to @channel, notice: 'Channel was successfully created.' }
+        format.json { render :show, status: :created, location: @channel }
+      else
+        format.html { render :new }
+        format.json { render json: @channel.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /channels/1
