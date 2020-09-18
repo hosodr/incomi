@@ -11,14 +11,13 @@
           </p>
         </div>
         <div class="col-2 px-0">
-          <button
+          <a
             v-if="parentThId === null"
-            type="button"
-            class="btn my-0 text-primary float-right"
+            class="my-0 float-right"
             @click="goThread"
           >
-            返信
-          </button>
+            reply
+          </a>
         </div>
       </div>
     </div>

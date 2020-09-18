@@ -7,12 +7,10 @@
           src="https://getbootstrap.com/docs/4.5/assets/brand/bootstrap-solid.svg"
           width="70"
         />
-        <div v-if="failed" class="alert alert-danger">
-          ログインに失敗しました
-        </div>
+        <div v-if="failed" class="alert alert-danger">signin failed</div>
         <form>
           <div class="form-group">
-            <label for="username">ユーザーネーム</label>
+            <label for="username">user name</label>
             <input
               id="username"
               v-model="username"
@@ -21,7 +19,7 @@
               required
             />
 
-            <label for="password">パスワード</label>
+            <label for="password">password</label>
             <input
               id="password"
               v-model="password"
@@ -35,7 +33,7 @@
               :disabled="username === '' || password === ''"
               @click="onSubmit"
             >
-              ログイン
+              signin
             </button>
           </div>
         </form>
@@ -55,7 +53,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLogin']),
+    ...mapGetters(['issignin']),
   },
   methods: {
     onSubmit() {
@@ -63,7 +61,7 @@ export default {
       // form.set('username', this.username)
       // form.set('password', this.password)
       // this.$axios
-      //   .post('/api/auth/login/', form)
+      //   .post('/api/auth/signin/', form)
       //   .then((res) => {
       //     const token = res.data.token
       //     this.storeToken(token)

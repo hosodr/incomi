@@ -8,6 +8,7 @@
               <b-icon-chat-right-text-fill />
               {{ thread.name }}
             </h4>
+
             <b-button
               v-if="addMyChannel"
               id="is-favorite"
@@ -33,6 +34,7 @@
             >
               <strong>add your channel list!</strong>
             </b-popover>
+            <p class="mb-0">{{ thread.abstract }}</p>
           </div>
 
           <div class="col-auto">
@@ -175,7 +177,7 @@ export default {
       thread: {
         thId: 1,
         name: 'チャンネルの名前',
-        abstract: 'このチャンネルの詳細',
+        abstract: 'このチャンネルの詳細このチャンネルの詳細',
         parentCommentId: 2,
         parentThId: null,
       },
