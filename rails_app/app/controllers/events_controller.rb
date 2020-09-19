@@ -11,11 +11,27 @@ class EventsController < ApplicationController
     @events = Event.all
   end
 
+  #イベント詳細を表示するAPI(getEventInfo(eventID))
   # GET /events/1
   # GET /events/1.json
   def show
+    event = Event.find(params[:id])
+    render json: event
   end
 
+  #ログイン中のユーザーがイベントに参加するAPI
+  #ユーザー認証実装後にちゃんと実装
+  def participate
+    #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
+    user = current_user
+    event = user.events.new(event_params)
+    if event.saved
+      render status: 200, json: { status: 200 }
+    else
+      render status: 400, json: { status: 400 }
+    end
+    
+  end
   # GET /events/new
   def new
     @event = Event.new
