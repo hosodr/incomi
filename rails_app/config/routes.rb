@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   resources :events
+  post 'events/:id/participate', to: 'events#participate'
+  
   resources :comments
   resources :channels
   resources :users
