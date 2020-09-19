@@ -5,10 +5,11 @@ require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
-  # GET /events
+  # GET /events?channelid={id}
   # GET /events.json
   def index
-    @events = Event.all
+    events = Event.where(channel_id: params[:channelid])
+    render json: events
   end
 
   #イベント詳細を表示するAPI(getEventInfo(eventID))
