@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <div class="row mt-3">
-      <div class="col-8">
-        <div class="row card-header mr-1">
+      <div class="col-md-8">
+        <div class="row card-header mr-1 pb-0">
           <div class="col-auto mr-auto">
             <h4 class="d-inline-block">
-              <b-icon-chat-right-text-fill />
+              <b-icon-chat-right-text />
               {{ thread.name }}
             </h4>
 
@@ -35,14 +35,25 @@
               <strong>add your channel list!</strong>
             </b-popover>
             <p class="mb-0">{{ thread.abstract }}</p>
+            <p class="d-inline-block mr-1 mb-0 text-muted" style="font-size: 8">
+              <b-icon-people />10 people
+            </p>
+            <p class="d-inline-block mr-1 mb-0 text-muted" style="font-size: 8">
+              <b-icon-chat-dots />10 comments
+            </p>
+            <p class="d-inline-block mr-1 mb-0 text-muted" style="font-size: 8">
+              <b-icon-calendar-2-event />10 events
+            </p>
           </div>
 
           <div class="col-auto">
-            <nuxt-link
-              class="btn btn-sm btn-outline-primary"
-              to="/event_list/make_event"
-              >create an event</nuxt-link
+            <b-button v-b-modal.create-event size="sm" variant="outline-primary"
+              >create an event</b-button
             >
+
+            <b-modal id="create-event" size="lg" title="Create a new event"
+              ><CreateEventModal
+            /></b-modal>
           </div>
         </div>
         <div class="row height-fixed scroll">
@@ -77,15 +88,15 @@
         </div>
       </div>
 
-      <div class="col-4">
+      <div class="col-md-4">
         <b-card title="Card Title" no-body>
           <b-card-header header-tag="nav">
             <b-nav card-header tabs>
               <b-nav-item :active="isThread" @click="isThread = true"
-                ><b-icon-chat-right-text-fill />Thread</b-nav-item
+                >Thread</b-nav-item
               >
               <b-nav-item :active="!isThread" @click="isThread = false"
-                ><b-icon-calendar2-event-fill />Events</b-nav-item
+                >Events</b-nav-item
               >
             </b-nav>
           </b-card-header>
@@ -149,21 +160,25 @@
 
 <script>
 import {
-  BIconSuitHeart,
   BIconSuitHeartFill,
+  BIconSuitHeart,
   BIconCursor,
   BIconSearch,
-  BIconCalendar2EventFill,
-  BIconChatRightTextFill,
+  BIconCalendar2Event,
+  BIconChatRightText,
+  BIconPeople,
+  BIconChatDots,
 } from 'bootstrap-vue'
 export default {
   components: {
-    BIconSuitHeart,
     BIconSuitHeartFill,
+    BIconSuitHeart,
     BIconCursor,
     BIconSearch,
-    BIconCalendar2EventFill,
-    BIconChatRightTextFill,
+    BIconCalendar2Event,
+    BIconChatRightText,
+    BIconPeople,
+    BIconChatDots,
   },
   data: () => {
     const date = new Date().toDateString()
@@ -179,16 +194,66 @@ export default {
       },
 
       messages: [
-        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 1,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 2,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 3,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 4,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 5,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 1,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 2,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 3,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 4,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
+          cmId: 5,
+          timestamp: date,
+          userId: 1,
+        },
       ],
       childThread: null,
       childMessages: null,
@@ -265,16 +330,66 @@ export default {
       }
       const date = new Date().toDateString()
       const message = [
-        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 1,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 2,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 3,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 4,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 5,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 1,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 2,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 3,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 4,
+          timestamp: date,
+          userId: 1,
+        },
+        {
+          msg: '何しようか\nhttps://www.google.com/',
+          cmId: 5,
+          timestamp: date,
+          userId: 1,
+        },
       ]
       this.childThread = thread
       this.childMessages = message

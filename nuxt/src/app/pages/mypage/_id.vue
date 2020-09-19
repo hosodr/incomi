@@ -3,7 +3,7 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <!-- ここからプロフィール -->
-        <div class="card border-primary mb-3">
+        <div class="card mb-3">
           <div class="card-header">
             <h5 class="mb-0 float-left"><b-icon-person-circle />Profile</h5>
             <a class="mb-0 float-right">modify</a>
@@ -12,32 +12,34 @@
             <table class="table">
               <tbody>
                 <tr>
-                  <th scope="row">Name:</th>
-                  <td class="text-break">{{ name }}</td>
+                  <th class="px-0" scope="row">Name:</th>
+                  <td class="text-break pr-0">{{ name }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">User id:</th>
-                  <td class="text-break">{{ userId }}</td>
+                  <th class="px-0" scope="row">User id:</th>
+                  <td class="text-break pr-0">{{ userId }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">Email:</th>
-                  <td class="text-break">{{ email }}</td>
+                  <th class="px-0" scope="row">Email:</th>
+                  <td class="text-break pr-0">{{ email }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">Num of host channels:</th>
-                  <td class="text-break">{{ numOfHostChannel }} channels</td>
+                  <th class="px-0" scope="row">Num of host channels:</th>
+                  <td class="text-break pr-0">
+                    {{ numOfHostChannel }} channels
+                  </td>
                 </tr>
                 <tr>
-                  <th scope="row">Num of host events:</th>
-                  <td class="text-break">{{ numOfHostEvent }} events</td>
+                  <th class="px-0" scope="row">Num of host events:</th>
+                  <td class="text-break pr-0">{{ numOfHostEvent }} events</td>
                 </tr>
                 <tr>
-                  <th scope="row">Num of follow channels:</th>
-                  <td class="text-break">{{ numOfFollowChannel }}</td>
+                  <th class="px-0" scope="row">Num of follow channels:</th>
+                  <td class="text-break pr-0">{{ numOfFollowChannel }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">Num of attend events:</th>
-                  <td class="text-break">{{ numOfAttendEvent }}</td>
+                  <th class="px-0" scope="row">Num of attend events:</th>
+                  <td class="text-break pr-0">{{ numOfAttendEvent }}</td>
                 </tr>
               </tbody>
             </table>
@@ -47,7 +49,7 @@
       <!-- ここまでプロフィール -->
       <div class="col-md-4">
         <!-- ここからホストチャンネル -->
-        <div class="card border-primary mb-3">
+        <div class="card mb-3">
           <div class="card-header">
             <h5 class="mb-0"><b-icon-chat-dots />Host channels</h5>
           </div>
@@ -62,7 +64,7 @@
 
       <div class="col-md-4">
         <!-- ここからフォローしたイベント -->
-        <div class="card border-primary mb-3">
+        <div class="card mb-3">
           <div class="card-header">
             <h5 class="mb-0"><b-icon-calendar-2-event />Host events</h5>
           </div>
@@ -77,7 +79,7 @@
 
       <div class="col-md-4">
         <!-- ここからフォローしたチャンネル -->
-        <div class="card border-primary mb-3">
+        <div class="card mb-3">
           <div class="card-header">
             <h5 class="mb-0"><b-icon-chat-dots />Following channels</h5>
           </div>
@@ -92,7 +94,7 @@
 
       <div class="col-md-4">
         <!-- ここからフォローしたイベント -->
-        <div class="card border-primary mb-3">
+        <div class="card mb-3">
           <div class="card-header">
             <h5 class="mb-0"><b-icon-calendar-2-event />Attend events</h5>
           </div>
