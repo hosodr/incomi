@@ -6,7 +6,7 @@
     <div class="d-flex w-100 justify-content-between">
       <h5 class="mb-1">{{ event.name }}</h5>
     </div>
-    <p class="mb-1">
+    <p class="mb-0" style="font-size: 14px">
       {{ event.abstract }}
     </p>
     <table>

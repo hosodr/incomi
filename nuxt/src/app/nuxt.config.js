@@ -42,6 +42,9 @@ export default {
     {
       src: '~/plugins/router.js',
     },
+    {
+      src: '~/plugins/autolink.js',
+    },
   ],
   /*
    ** Auto import components
