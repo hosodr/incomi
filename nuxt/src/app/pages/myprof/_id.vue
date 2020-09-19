@@ -13,47 +13,38 @@
               <tbody>
                 <tr>
                   <th scope="row">Name:</th>
-                  <td>{{ name }}</td>
+                  <td class="text-break">{{ name }}</td>
                 </tr>
                 <tr>
                   <th scope="row">User id:</th>
-                  <td>{{ userId }}</td>
+                  <td class="text-break">{{ userId }}</td>
                 </tr>
                 <tr>
                   <th scope="row">Email:</th>
-                  <td>{{ email }}</td>
+                  <td class="text-break">{{ email }}</td>
                 </tr>
                 <tr>
                   <th scope="row">Num of host channels:</th>
-                  <td>{{ numOfHostChannel }} channels</td>
+                  <td class="text-break">{{ numOfHostChannel }} channels</td>
                 </tr>
                 <tr>
                   <th scope="row">Num of host events:</th>
-                  <td>{{ numOfHostEvent }} events</td>
+                  <td class="text-break">{{ numOfHostEvent }} events</td>
                 </tr>
                 <tr>
                   <th scope="row">Num of follow channels:</th>
-                  <td>{{ numOfFollowChannel }}</td>
+                  <td class="text-break">{{ numOfFollowChannel }}</td>
                 </tr>
                 <tr>
                   <th scope="row">Num of attend events:</th>
-                  <td>{{ numOfAttendEvent }}</td>
+                  <td class="text-break">{{ numOfAttendEvent }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <!-- ここまでプロフィール -->
-        <!-- ここからグラフ -->
-        <div class="card border-primary mb-3">
-          <div class="card-header">
-            <h5 class="mb-0 float-left"><b-icon-person-circle />Profile</h5>
-            <a class="mb-0 float-right">modify</a>
-          </div>
-          <div class="card-body"></div>
-        </div>
       </div>
-
+      <!-- ここまでプロフィール -->
       <div class="col-md-4">
         <!-- ここからホストチャンネル -->
         <div class="card border-primary mb-3">
@@ -67,7 +58,9 @@
           </div>
         </div>
         <!-- ここまでホストチャンネル -->
+      </div>
 
+      <div class="col-md-4">
         <!-- ここからフォローしたイベント -->
         <div class="card border-primary mb-3">
           <div class="card-header">
@@ -80,7 +73,9 @@
           </div>
         </div>
         <!-- ここまでフォローしたイベント -->
+      </div>
 
+      <div class="col-md-4">
         <!-- ここからフォローしたチャンネル -->
         <div class="card border-primary mb-3">
           <div class="card-header">
@@ -93,7 +88,9 @@
           </div>
         </div>
         <!-- ここまでフォローしたチャンネル -->
+      </div>
 
+      <div class="col-md-4">
         <!-- ここからフォローしたイベント -->
         <div class="card border-primary mb-3">
           <div class="card-header">
