@@ -8,6 +8,7 @@
               <b-icon-chat-right-text-fill />
               {{ thread.name }}
             </h4>
+
             <b-button
               v-if="addMyChannel"
               id="is-favorite"
@@ -33,6 +34,7 @@
             >
               <strong>add your channel list!</strong>
             </b-popover>
+            <p class="mb-0">{{ thread.abstract }}</p>
           </div>
 
           <div class="col-auto">
@@ -41,20 +43,10 @@
               to="/event_list/make_event"
               >create an event</nuxt-link
             >
-            <!-- <nuxt-link class="btn btn-sm btn-outline-primary" to="/event_list"
-              >view events</nuxt-link
-            > -->
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              @click="isThread = false"
-            >
-              view events
-            </button>
           </div>
         </div>
-        <div class="row">
-          <ul class="col list-group height-fixed scroll">
+        <div class="row height-fixed scroll">
+          <ul ref="messages" class="col list-group">
             <template v-for="(message, key) in messages">
               <Message
                 :key="key"
@@ -84,66 +76,72 @@
           </div>
         </div>
       </div>
-      <div v-if="isThread" class="col-4">
-        <div class="row card-header mr-1">
-          <p class="mb-0">
-            <b-icon-chat-right-text-fill />
-            {{ childThread.name }}
-          </p>
-        </div>
-        <div class="row">
-          <ul v-if="isThread" class="col list-group height-fixed scroll">
-            <template v-for="(message, key) in childMessages">
-              <Message
-                :key="key"
-                :message="message"
-                :parent-th-id="childThread.parentThId"
-                :get-thread="getThread"
-                :show-thread="(isThread = true)"
-              />
-            </template>
-          </ul>
-        </div>
-        <div class="row">
-          <form class="col form-group">
-            <div class="input-group mb-3">
-              <textarea
-                class="form-control"
-                placeholder="add comment"
-              ></textarea>
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary" type="button">
-                  <b-icon-cursor />
-                </button>
+
+      <div class="col-4">
+        <b-card title="Card Title" no-body>
+          <b-card-header header-tag="nav">
+            <b-nav card-header tabs>
+              <b-nav-item :active="isThread" @click="isThread = true"
+                ><b-icon-chat-right-text-fill />Thread</b-nav-item
+              >
+              <b-nav-item :active="!isThread" @click="isThread = false"
+                ><b-icon-calendar2-event-fill />Events</b-nav-item
+              >
+            </b-nav>
+          </b-card-header>
+
+          <b-card-body>
+            <div v-if="isThread">
+              <div class="row">
+                <ul v-if="isThread" class="col list-group height-fixed scroll">
+                  <template v-for="(message, key) in childMessages">
+                    <Message
+                      :key="key"
+                      :message="message"
+                      :parent-th-id="childThread.parentThId"
+                      :get-thread="getThread"
+                      :show-thread="(isThread = true)"
+                    />
+                  </template>
+                </ul>
+              </div>
+              <div class="row">
+                <form class="col form-group mb-0">
+                  <div class="input-group">
+                    <textarea
+                      class="form-control"
+                      placeholder="add comment"
+                    ></textarea>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-primary" type="button">
+                        <b-icon-cursor />
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
-          </form>
-        </div>
-      </div>
 
-      <div v-else class="col-4">
-        <div class="row card-header">
-          <p class="mb-0">
-            <b-icon-calendar2-event-fill />
-            Events
-          </p>
-        </div>
-        <div class="row">
-          <b-input-group size="sm" class="mb-2">
-            <b-form-input
-              type="search"
-              placeholder="Search event"
-            ></b-form-input>
-            <b-input-group-prepend is-text>
-              <b-icon-search />
-            </b-input-group-prepend>
-          </b-input-group>
-        </div>
-        <div class="row justify-content-center height-fixed scroll">
-          <template v-for="event in events">
-            <EventItem :key="event.id" :event="event" />
-          </template>
-        </div>
+            <div v-else>
+              <div class="row">
+                <b-input-group size="sm" class="mb-2">
+                  <b-form-input
+                    type="search"
+                    placeholder="Search event"
+                  ></b-form-input>
+                  <b-input-group-prepend is-text>
+                    <b-icon-search />
+                  </b-input-group-prepend>
+                </b-input-group>
+              </div>
+              <div class="row justify-content-center height-fixed scroll">
+                <template v-for="event in events">
+                  <EventItem :key="event.id" :event="event" />
+                </template>
+              </div>
+            </div>
+          </b-card-body>
+        </b-card>
       </div>
     </div>
   </div>
@@ -175,7 +173,7 @@ export default {
       thread: {
         thId: 1,
         name: 'チャンネルの名前',
-        abstract: 'このチャンネルの詳細',
+        abstract: 'このチャンネルの詳細このチャンネルの詳細',
         parentCommentId: 2,
         parentThId: null,
       },
@@ -249,6 +247,11 @@ export default {
         },
       ],
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.messages.scrollIntoView(false)
+    })
   },
   computed: {},
   methods: {
