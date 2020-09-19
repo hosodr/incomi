@@ -14,7 +14,7 @@ channel1 = Channel.create!(name:"Machine Learning", abstract:'for beginner')
 channel2 = Channel.create!(name:"Statistics", abstract:'for beginner')
 
 event1 = Event.create!(channel_id:1,host_user_id:1 ,name:'GAN')
-event2 = Event.create!(channel_id:2,host_user_id:2 ,name:'How to use R')
+event2 = Event.create!(channel_id:1,host_user_id:2 ,name:'How to use R')
 
 comment1 = Comment.create!(user_id:1, channel_id:1)
 comment2 = Comment.create!(user_id:2, channel_id:2)
