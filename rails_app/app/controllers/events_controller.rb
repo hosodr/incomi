@@ -27,18 +27,12 @@ class EventsController < ApplicationController
 
   # 100urls/24hours can be generated
   def access
-    api_key = "hK6x9GGqQoqb07k0CJY3gw"
-    secret = "qv6NnyFfACjpziVCuXP61ETZX5OfSxeGxl1B"
-    user_id = "zZIC4Ln0TZ2lRdIpwp8szA"
-    jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImhLNng5R0dxUW9xYjA3azBDSlkzZ3ciLCJleHAiOjE2MDEwMjU2MTAsImlhdCI6MTYwMDQyMDgxM30.j8RrdYOdJpbkR-8GNvikOFWsSYqF2S3zF3eyFWCXPD0"
-    meeting_url = "https://api.zoom.us/v2/users/#{user_id}/meetings"
-    uri = URI.parse(meeting_url)
+    uri = URI.parse(MEETING_URL)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     req = Net::HTTP::Post.new(uri.path)
-    req["Authorization"] = "Bearer #{jwt}"
-    # Bearer = "Bearer #{jwt}"
+    req["Authorization"] = "Bearer #{JWT}"
     req["Content-Type"] = "application/json"
       req.body = {
           "type":1,
