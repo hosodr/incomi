@@ -8,7 +8,6 @@ class EventsController < ApplicationController
   # GET /events?channel_id={id}
   # GET /events.json
   def index
-    p params[:channel_id]
     if params[:channel_id] == nil
       events = Event.all
     else
