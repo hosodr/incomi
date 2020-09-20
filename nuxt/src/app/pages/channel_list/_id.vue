@@ -3,59 +3,89 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <div class="row card-header mr-1 pb-0">
-          <div class="col-auto mr-auto">
-            <h4 class="d-inline-block">
-              <b-icon-chat-right-text />
-              {{ thread.name }}
-            </h4>
+          <div class="col">
+            <div class="row">
+              <div class="col-md-6">
+                <h4 class="row">
+                  <b-icon-chat-right-text />
+                  {{ thread.name }}
+                </h4>
+              </div>
 
-            <b-button
-              v-if="addMyChannel"
-              id="is-favorite"
-              variant="text"
-              class="d-inline-block text-primary"
-              @click="addMyChannel = !addMyChannel"
-              ><b-icon-suit-heart-fill
-            /></b-button>
-            <b-button
-              v-else
-              id="not-favorite"
-              variant="text"
-              class="d-inline-block text-primary"
-              @click="addMyChannel = !addMyChannel"
-              ><b-icon-suit-heart />
-            </b-button>
+              <div class="col-md-6 px-0">
+                <button
+                  v-if="addMyChannel"
+                  id="is-favorite"
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  @click="addMyChannel = !addMyChannel"
+                >
+                  following
+                </button>
+                <button
+                  v-else
+                  id="not-favorite"
+                  type="button"
+                  class="btn btn-default btn-sm border-dark rounded"
+                  @click="addMyChannel = !addMyChannel"
+                >
+                  follow
+                </button>
 
-            <b-popover
+                <!-- <b-button v-b-modal.create-event size="sm" variant="secondary"
+                  >create an event</b-button
+                > -->
+                <button
+                  v-b-modal.create-event
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                >
+                  create event
+                </button>
+
+                <button
+                  v-b-toggle.sidebar-backdrop
+                  type="button"
+                  class="d-sm-none btn btn-sm btn-outline-secondary"
+                >
+                  show events
+                </button>
+              </div>
+            </div>
+            <SideBar />
+
+            <!-- <b-popover
               target="is-favorite"
               :show.sync="addMyChannel"
               triggers="click"
               placement="top"
             >
               <strong>add your channel list!</strong>
-            </b-popover>
-            <p class="mb-0">{{ thread.abstract }}</p>
-            <p class="d-inline-block mr-1 mb-0 text-muted" style="font-size: 8">
-              <b-icon-people />10 people
-            </p>
-            <p class="d-inline-block mr-1 mb-0 text-muted" style="font-size: 8">
-              <b-icon-chat-dots />10 comments
-            </p>
-            <p class="d-inline-block mr-1 mb-0 text-muted" style="font-size: 8">
-              <b-icon-calendar-2-event />10 events
-            </p>
+            </b-popover> -->
+
+            <div class="row">
+              <p class="mb-0">{{ thread.abstract }}</p>
+            </div>
+
+            <div class="row">
+              <p class="mr-1 mb-0 text-muted" style="font-size: 8">
+                <b-icon-people />10 people
+              </p>
+              <p class="mr-1 mb-0 text-muted" style="font-size: 8">
+                <b-icon-chat-dots />10 comments
+              </p>
+              <p class="mr-1 mb-0 text-muted" style="font-size: 8">
+                <b-icon-calendar-2-event />10 events
+              </p>
+            </div>
           </div>
 
-          <div class="col-auto">
-            <b-button v-b-modal.create-event size="sm" variant="outline-primary"
-              >create an event</b-button
-            >
-
-            <b-modal id="create-event" size="lg" title="Create a new event"
-              ><CreateEventModal
-            /></b-modal>
-          </div>
+          <b-modal id="create-event" size="lg" title="Create a new event"
+            ><CreateEventModal
+          /></b-modal>
+          <!-- </div> -->
         </div>
+
         <div class="row height-fixed scroll">
           <ul ref="messages" class="col list-group">
             <template v-for="(message, key) in messages">
@@ -88,7 +118,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4 d-none d-sm-block">
         <b-card title="Card Title" no-body>
           <b-card-header header-tag="nav">
             <b-nav card-header tabs>
@@ -160,8 +190,6 @@
 
 <script>
 import {
-  BIconSuitHeartFill,
-  BIconSuitHeart,
   BIconCursor,
   BIconSearch,
   BIconCalendar2Event,
@@ -171,8 +199,6 @@ import {
 } from 'bootstrap-vue'
 export default {
   components: {
-    BIconSuitHeartFill,
-    BIconSuitHeart,
     BIconCursor,
     BIconSearch,
     BIconCalendar2Event,
