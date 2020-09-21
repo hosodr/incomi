@@ -1,14 +1,11 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center mb-2">
-      <h1>Create a new event</h1>
-    </div>
     <form>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="eventName">
+        <label class="col-lg-2 col-form-label" for="eventName">
           Event Name
         </label>
-        <div class="col-sm-10">
+        <div class="col-lg-10">
           <input
             id="eventName"
             v-model="eventName"
@@ -19,10 +16,10 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="eventDescription">
+        <label class="col-lg-2 col-form-label" for="eventDescription">
           Description
         </label>
-        <div class="col-sm-10">
+        <div class="col-lg-10">
           <input
             id="eventDescription"
             v-model="eventDescription"
@@ -33,17 +30,17 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="eventDatePicker">
+        <label class="col-lg-2 col-form-label" for="eventDatePicker">
           Event Date
         </label>
-        <div class="col-sm-6">
+        <div class="col-lg-6">
           <b-form-datepicker
             id="eventDatePicker"
             v-model="eventDate"
             :min="today"
           ></b-form-datepicker>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4">
           <b-form-timepicker
             v-model="eventTime"
             locale="en"
@@ -51,10 +48,10 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="startDatePicker">
+        <label class="col-lg-2 col-form-label" for="startDatePicker">
           Period
         </label>
-        <div class="col-md-5">
+        <div class="col-lg-5">
           <b-form-datepicker
             id="startDatePicker"
             v-model="startDate"
@@ -62,25 +59,13 @@
             placeholder="Start Date"
           ></b-form-datepicker>
         </div>
-        <div class="col-md-5">
+        <div class="col-lg-5">
           <b-form-datepicker
             id="endDatePicker"
             v-model="endDate"
             :min="startDate"
             placeholder="End Date"
           ></b-form-datepicker>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-2">
-          <button type="button" class="btn btn-primary" @click="submit">
-            Submit
-          </button>
-        </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-primary" @click="cancel">
-            Cancel
-          </button>
         </div>
       </div>
     </form>

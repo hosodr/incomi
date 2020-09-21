@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="info">
+  <b-navbar class="mb-2" toggleable="lg" type="dark" variant="info">
     <b-navbar-brand to="/" nuxt>インコミ</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -17,8 +17,10 @@
           <template v-slot:button-content>
             <em>User</em>
           </template>
-          <b-dropdown-item to="/mypage" nuxt>My page</b-dropdown-item>
-          <b-dropdown-item to="/login" nuxt>login</b-dropdown-item>
+          <b-dropdown-item :to="{ name: 'mypage-id', params: { id: '1' } }" nuxt
+            >My page</b-dropdown-item
+          >
+          <b-dropdown-item to="/signin" nuxt>signin</b-dropdown-item>
           <b-dropdown-item to="/signup" nuxt>signup</b-dropdown-item>
           <b-dropdown-item to="/" nuxt>signout</b-dropdown-item>
         </b-nav-item-dropdown>

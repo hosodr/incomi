@@ -4,7 +4,28 @@ class ChannelsController < ApplicationController
   # GET /channels
   # GET /channels.json
   def index
-    @channels = Channel.all
+    sql = """
+    select comment_count.id, name, abstract, num_of_comments, num_of_events
+    from (
+        select channels.id id, channels.name, channels.abstract, count(comments.id) num_of_comments
+        from channels left join comments on channels.id=comments.channel_id
+        where channels.parent_channel_id is null
+        group by channels.id
+    ) comment_count join (
+        select channels.id, count(events.id) num_of_events
+        from channels left join events on channels.id=events.channel_id
+        where channels.parent_channel_id is null
+        group by channels.id
+    ) event_count
+    on comment_count.id = event_count.id
+    """
+    res = ActiveRecord::Base.connection.select_all(sql)
+    logger.debug(res.to_a)
+    @result = Hash.new
+    @result["channels"] = res.to_a
+    respond_to do |format|
+      format.json { render json: @result, status: :ok}
+    end
   end
 
   # GET /channels/1

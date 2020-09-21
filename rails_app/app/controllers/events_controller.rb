@@ -1,3 +1,7 @@
+require 'net/https'
+require 'net/http'
+require 'uri'
+require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
@@ -21,17 +25,33 @@ class EventsController < ApplicationController
   def edit
   end
 
+  # 100urls/24hours can be generated
+  def access
+    uri = URI.parse(MEETING_URL)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    req = Net::HTTP::Post.new(uri.path)
+    req["Authorization"] = "Bearer #{JWT}"
+    req["Content-Type"] = "application/json"
+      req.body = {
+          "type":1,
+      }.to_json
+    res = http.request(req)
+    result = JSON.parse(res.body)
+    return result["join_url"]
+  end
+
   # POST /events
   # POST /events.json
   def create
+    zoom_url = access
+    params[:event][:zoom_url] = zoom_url
     @event = Event.new(event_params)
-
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render :show, status: :created, location: @event }
       else
-        format.html { render :new }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -69,6 +89,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:channel_id, :name, :abstract, :zoom_url, :host_date, :from_date, :to_date, :is_delete)
+      params.require(:event).permit(:channel_id, :name, :abstract, :zoom_url, :host_date, :from_date, :to_date, :is_delete, :host_user_id)
     end
 end

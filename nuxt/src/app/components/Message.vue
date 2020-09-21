@@ -1,24 +1,21 @@
 <template>
   <div class="card border-right-0 border-left-0">
     <div class="card-body my-0">
-      <h6 class="card-subtitle text-muted">
+      <h6 class="card-subtitle text-muted" style="font-size: 14px">
         {{ message.timestamp }}
       </h6>
       <div class="row">
         <div class="col-10 pr-0">
-          <p class="card-text">
-            {{ message.msg }}
-          </p>
+          <autolink class="card-text" :text="message.msg" />
         </div>
         <div class="col-2 px-0">
-          <button
+          <a
             v-if="parentThId === null"
-            type="button"
-            class="btn my-0 text-primary float-right"
+            class="my-0 float-right"
             @click="goThread"
           >
-            返信
-          </button>
+            reply
+          </a>
         </div>
       </div>
     </div>

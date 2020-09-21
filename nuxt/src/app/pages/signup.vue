@@ -7,13 +7,13 @@
           src="https://getbootstrap.com/docs/4.5/assets/brand/bootstrap-solid.svg"
           width="70"
         />
-        <h2 class="text-center">アカウント作成</h2>
+        <h2 class="text-center">create an acount</h2>
         <div v-if="failed" class="alert alert-danger" role="alert">
           {{ errorMessage }}
         </div>
         <form>
           <div class="form-group">
-            <label>ユーザーネームを入力してください</label>
+            <label>please fill in your username</label>
             <input
               v-model="username"
               class="form-control"
@@ -22,7 +22,15 @@
             />
           </div>
           <div class="form-group">
-            <label>パスワードを入力してください</label>
+            <label>please fill in your user id</label>
+            <input v-model="userId" class="form-control" type="text" required />
+          </div>
+          <div class="form-group">
+            <label>please fill in your email address</label>
+            <input v-model="email" class="form-control" type="email" required />
+          </div>
+          <div class="form-group">
+            <label>please fill in password</label>
             <input
               v-model="password1"
               class="form-control"
@@ -31,7 +39,7 @@
             />
           </div>
           <div class="form-group">
-            <label>パスワードをもう一度入力してください</label>
+            <label>password one more </label>
             <input
               v-model="password2"
               class="form-control"
@@ -48,14 +56,14 @@
               class="glyphicon glyphicon-exclamation-sign"
               aria-hidden="true"
             ></span>
-            パスワードが一致しました
+            Password matched
           </p>
           <p v-else-if="!isSamePassword" class="text-danger" role="alert">
             <span
               class="glyphicon glyphicon-exclamation-sign"
               aria-hidden="true"
             ></span>
-            パスワードが一致しません
+            Password mismatched
           </p>
 
           <div class="form-group">
@@ -68,7 +76,7 @@
               :disabled="!isSamePassword || emptyPassword || emptyUsername"
               @click="onSubmit"
             >
-              登録
+              registar
             </button>
           </div>
         </form>
@@ -83,6 +91,8 @@ export default {
   data() {
     return {
       username: '',
+      userId: '',
+      email: '',
       password1: '',
       password2: '',
       errorMessage: '',
@@ -109,7 +119,7 @@ export default {
       //   .post('/api/auth/register/', form)
       //   .then((res) => {
       //     this.$axios
-      //       .post('/api/auth/login/', form)
+      //       .post('/api/auth/signin/', form)
       //       .then((res) => {
       //         const token = res.data.token
       //         this.storeToken(token)
