@@ -20,21 +20,21 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
-    event = Event.find(params[:id])
-    render json: event
+    render json: @event
   end
 
   #ログイン中のユーザーがイベントに参加するAPI
-  #ユーザー認証実装後にちゃんと実装
-  # POST /events/:id/participate
+  #POST events/:id/participate/:user_id
   def participate
     #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
-    user = current_user
-    participant = Participation.new(user_id: user.id, event_id: :id)
-    if participant.saved
-      render status: 200, json: { status: 200 }
+    #user = current_user
+    #ユーザー認証をつけない場合は受け取ったidのユーザーを登録
+    user = User.find(params[:user_id])
+    participant = Participation.new(user_id: params[:user_id], event_id: params[:id])
+    if participant.save
+      render status: :ok, json: { status: :ok }
     else
-      render status: 400, json: { status: 400 }
+      render status: :bad_request, json: { status: :bad_request }
     end
   end
     
