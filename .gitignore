@@ -25,3 +25,4 @@ rails_app/.byebug_history
 ./nuxt/src/app/node_modules
 
 .github/workflows/.secrets
+ktmp/

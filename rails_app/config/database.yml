@@ -15,10 +15,10 @@ default: &default
   pool: 5
   username: root
   password: root_pass
-  host: db
 
 development:
   <<: *default
+  host: db
   database: rails_app_development
 
 # Warning: The database defined as "test" will be erased and
@@ -26,6 +26,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  host: db
   database: rails_app_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
@@ -49,5 +50,5 @@ test:
 #
 production:
   <<: *default
+  host: <%= ENV['DATABASE_IP'] %>
   database: rails_app_production
-  url: <%= ENV['DATABASE_URL'] %>
