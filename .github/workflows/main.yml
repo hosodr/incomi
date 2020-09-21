@@ -68,12 +68,14 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./nuxt/src/app
 
-      - name: Build images
-        run: docker-compose -f docker-compose-prod.yml build 
-
       - name: Log into Google Container Registry
       # Create a Service Account with the "Storage Admin" role and put the JSON key of the account in a secret called "GCR_JSON"
         run: echo "${{ secrets.GCR_JSON }}" | docker login $REGISTRY_HOST -u _json_key --password-stdin
+
+      - name: Build images
+      run: |
+        echo ::set-env name=REGISTRY_URL::$(echo $REGISTRY_URL)
+        docker-compose -f docker-compose-prod.yml build 
 
       - name: Push image to Google Container Registry
         run: docker-compose push
