@@ -73,9 +73,9 @@ jobs:
         run: echo "${{ secrets.GCR_JSON }}" | docker login $REGISTRY_HOST -u _json_key --password-stdin
 
       - name: Build images
-      run: |
-        echo ::set-env name=REGISTRY_URL::$(echo $REGISTRY_URL)
-        docker-compose -f docker-compose-prod.yml build 
+        run: |
+          echo ::set-env name=REGISTRY_URL::$(echo $REGISTRY_URL)
+          docker-compose -f docker-compose-prod.yml build 
 
       - name: Push image to Google Container Registry
         run: docker-compose push
