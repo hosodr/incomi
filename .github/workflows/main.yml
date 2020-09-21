@@ -48,9 +48,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - uses: actions/setup-node@v1
       - name: Build frontend as static HTML files using nuxt generate
         working-directory: ./nuxt/src/app
-        uses: actions/setup-node@v1
         with:
           node-version: '12'
         run: |
