@@ -16,7 +16,7 @@ on:
 env:
   REGISTRY_HOST: https://asia.gcr.io
   PROJECT_ID: incomi
-  REGISTRY_URL: $REGISTRY_HOST/$PROJECT_ID
+  REGISTRY_URL: asia.gcr.io/incomi
 
 jobs:
   # Run tests.
@@ -48,6 +48,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.5'
+      
+      - run: python -c 'print("Hello")'
+
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
@@ -69,16 +75,23 @@ jobs:
           PROJECT_PATH: ./nuxt/src/app
 
       - name: Log into Google Container Registry
-      # Create a Service Account with the "Storage Admin" role and put the JSON key of the account in a secret called "GCR_JSON"
-        run: echo "${{ secrets.GCR_JSON }}" | docker login $REGISTRY_HOST -u _json_key --password-stdin
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: incomi
+          service_account_key: ${{ secrets.GCR_JSON }}
+          export_default_credentials: true
+      - run: | 
+          gcloud info
 
       - name: Build images
         run: |
           echo ::set-env name=REGISTRY_URL::$(echo $REGISTRY_URL)
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin $REGISTRY_HOST
           docker-compose -f docker-compose-prod.yml build 
 
       - name: Push image to Google Container Registry
-        run: docker-compose push
+        run: docker-compose -f docker-compose-prod.yml push
       
       - name: Log in to the virtual machine on GCP
         uses: appleboy/ssh-action@master
