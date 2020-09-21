@@ -1,12 +1,14 @@
 version: "3.0"
 services: 
     # DB: Google Cloud SQL (MySQL 8.0)
+    # DB_URL: Automatically supplied by the system env $DATABASE_URL
     # Frontend: nuxt generate -> firebase static
     back:
-        image: ${REGISTRY_URL}/app_image:latest
+        image: $REGISTRY_URL/app_image:latest
         environment:
          - SPROCKETS_CACHE=/cache
          - RAILS_ENV=production
+         - DATABASE_URL=$DATABASE_URL
         build: rails_app
         command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
         container_name: app_container
