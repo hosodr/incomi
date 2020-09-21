@@ -36,12 +36,7 @@ jobs:
   #           docker build . --file Dockerfile
   #         fi
 
-  # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    # needs: test
-
+  deploy_front:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
@@ -50,7 +45,7 @@ jobs:
       
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.5'
+          python-version: '3.x'
       
       - run: python -c 'print("Hello")'
 
@@ -73,6 +68,22 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./nuxt/src/app
+
+  deploy_back:
+    # Ensure test job passes before pushing image.
+    # needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - run: python -c 'print("Hello")'
 
       - name: Log into Google Container Registry
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
