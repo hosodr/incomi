@@ -1,4 +1,4 @@
-name: Docker
+name: Main Deployment
 
 on:
   push:
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-          
+
       - name: Build frontend as static HTML files using nuxt generate
         working-directory: ./nuxt/src/app
         run: |
@@ -59,12 +59,14 @@ jobs:
           yarn run generate
       
       - name: Deploy frontend to Firebase
-        working-directory: ./nuxt/src/app
         uses: w9jds/firebase-action@v1.5.0
         with:
           args: deploy --only hosting
+          name: incomi
+          path: dist
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: ./nuxt/src/app
 
       - name: Build images
         run: docker-compose -f docker-compose-prod.yml build 
