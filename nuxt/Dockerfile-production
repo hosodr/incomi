@@ -1,0 +1,57 @@
+FROM node:12.5.0-alpine as builder
+
+ENV LANG C.UTF-8 && \
+ENV TZ Asia/Tokyo
+
+# install node-prune 
+
+RUN  apk add --no-cache curl git && cd /tmp && \
+    curl -#L https://github.com/tj/node-prune/releases/download/v1.0.1/node-prune_1.0.1_linux_amd64.tar.gz | tar -xvzf- && \
+    mv -v node-prune /usr/local/bin && rm -rvf * && \
+    echo "yarn cache clean && node-prune" > /usr/local/bin/node-clean && chmod +x /usr/local/bin/node-clean
+
+WORKDIR /root
+
+# install yarn command.
+# - https://yarnpkg.com/lang/ja/docs/install/#alternatives-stable
+# - https://github.com/yarnpkg/yarn/releases
+ARG CMD_YARN_VERSION=1.13.0
+RUN npm install --global yarn@$CMD_YARN_VERSION && \
+    chmod +x /usr/local/bin/yarn
+
+# install direnv command.
+# - https://github.com/direnv/direnv
+# - https://github.com/direnv/direnv/releases
+ARG DEV_DIRENV_VERSION=v2.19.0
+RUN wget -O direnv https://github.com/direnv/direnv/releases/download/$DEV_DIRENV_VERSION/direnv.linux-amd64 && \
+    mv direnv /usr/local/bin/ && \
+    chmod +x /usr/local/bin/direnv && \
+    echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
+
+# install vue-cli
+RUN npm install --global @vue/cli @vue/cli-init
+
+# copy application code from host.
+ADD src /src
+WORKDIR /src/app
+
+RUN yarn --frozen-lockfile --non-interactive && node-clean
+RUN yarn build
+
+# runner
+
+FROM node:12.5.0-alpine
+
+WORKDIR /app
+ENV HOST=0.0.0.0
+ENV NODE_ENV=production
+
+ADD src/app/package.json ./
+ADD src/app/nuxt.config.js ./
+
+COPY --from=builder ./src/app/node_modules ./node_modules/
+COPY --from=builder ./src/app/.nuxt ./.nuxt/
+COPY --from=builder ./src/app/static ./static/
+
+EXPOSE 3000
+CMD ["yarn", "start"]

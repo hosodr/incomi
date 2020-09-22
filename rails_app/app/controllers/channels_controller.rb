@@ -4,9 +4,6 @@ class ChannelsController < ApplicationController
   # GET /channels
   # GET /channels.json
   def index
-    # @channels = Channel.all
-    # Channel.
-
     sql = """
     select comment_count.id, name, abstract, num_of_comments, num_of_events
     from (

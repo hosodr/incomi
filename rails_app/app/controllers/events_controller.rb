@@ -5,31 +5,38 @@ require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
-  # GET /events
+  # GET /events?channel_id={id}
   # GET /events.json
   def index
-    @events = Event.all
+    if params[:channel_id] == nil
+      events = Event.all
+    else
+      events = Event.where(channel_id: params[:channel_id])
+    end
+    render json: events
   end
 
   #イベント詳細を表示するAPI(getEventInfo(eventID))
   # GET /events/1
   # GET /events/1.json
   def show
-    event = Event.find(params[:id])
-    render json: event
+    render json: @event
   end
 
   #ログイン中のユーザーがイベントに参加するAPI
-  #ユーザー認証実装後にちゃんと実装
+  #POST events/:id/participate/:user_id
   def participate
     #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
-    user = current_user
-    event = user.events.new(event_params)
-    if event.saved
-      render status: 200, json: { status: 200 }
+    #user = current_user
+    #ユーザー認証をつけない場合は受け取ったidのユーザーを登録
+    user = User.find(params[:user_id])
+    participant = Participation.new(user_id: params[:user_id], event_id: params[:id])
+    if participant.save
+      render status: :ok, json: { status: :ok }
     else
-      render status: 400, json: { status: 400 }
+      render status: :bad_request, json: { status: :bad_request }
     end
+  end
     
   end
   # GET /events/new
@@ -43,18 +50,12 @@ class EventsController < ApplicationController
 
   # 100urls/24hours can be generated
   def access
-    api_key = "hK6x9GGqQoqb07k0CJY3gw"
-    secret = "qv6NnyFfACjpziVCuXP61ETZX5OfSxeGxl1B"
-    user_id = "zZIC4Ln0TZ2lRdIpwp8szA"
-    jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImhLNng5R0dxUW9xYjA3azBDSlkzZ3ciLCJleHAiOjE2MDEwMjU2MTAsImlhdCI6MTYwMDQyMDgxM30.j8RrdYOdJpbkR-8GNvikOFWsSYqF2S3zF3eyFWCXPD0"
-    meeting_url = "https://api.zoom.us/v2/users/#{user_id}/meetings"
-    uri = URI.parse(meeting_url)
+    uri = URI.parse(MEETING_URL)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     req = Net::HTTP::Post.new(uri.path)
-    req["Authorization"] = "Bearer #{jwt}"
-    # Bearer = "Bearer #{jwt}"
+    req["Authorization"] = "Bearer #{JWT}"
     req["Content-Type"] = "application/json"
       req.body = {
           "type":1,
