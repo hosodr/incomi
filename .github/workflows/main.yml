@@ -2,13 +2,8 @@ name: Main Deployment
 
 on:
   push:
-    # Publish `master` as Docker `latest` image.
     branches:
-      - khem/cicd-integration
-
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+      - develop
 
   # Run tests for any PRs.
   pull_request:
