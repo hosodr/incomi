@@ -1,14 +1,23 @@
 <template>
   <div class="container">
+    <ThreadSideBar
+      :messages="threadComments"
+      :root-message="rootMessage"
+      :thread-id="threadId"
+    />
+    <EventSideBar :events="events" />
+    <b-modal id="create-event" size="lg" title="Create a new event"
+      ><CreateEventModal
+    /></b-modal>
     <div class="row mt-3">
       <div class="col-md-8">
-        <div class="row card-header mr-1 pb-0">
+        <div class="row card-header pb-0">
           <div class="col">
             <div class="row">
               <div class="col-md-6">
                 <h4 class="row">
                   <b-icon-chat-right-text />
-                  {{ thread.name }}
+                  {{ channelName }}
                 </h4>
               </div>
 
@@ -32,9 +41,6 @@
                   follow
                 </button>
 
-                <!-- <b-button v-b-modal.create-event size="sm" variant="secondary"
-                  >create an event</b-button
-                > -->
                 <button
                   v-b-modal.create-event
                   type="button"
@@ -44,7 +50,7 @@
                 </button>
 
                 <button
-                  v-b-toggle.sidebar-backdrop
+                  v-b-toggle.event-sidebar-backdrop
                   type="button"
                   class="d-sm-none btn btn-sm btn-outline-secondary"
                 >
@@ -52,7 +58,6 @@
                 </button>
               </div>
             </div>
-            <SideBar />
 
             <!-- <b-popover
               target="is-favorite"
@@ -64,56 +69,35 @@
             </b-popover> -->
 
             <div class="row">
-              <p class="mb-0">{{ thread.abstract }}</p>
+              <p class="mb-0">{{ channelAbstract }}</p>
             </div>
 
             <div class="row">
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
-                <b-icon-people />10 people
+                <b-icon-people />{{ followingUsers.length }} people
               </p>
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
-                <b-icon-chat-dots />10 comments
+                <b-icon-chat-dots />{{ channelComments.length }} comments
               </p>
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
-                <b-icon-calendar-2-event />10 events
+                <b-icon-calendar-2-event />{{ events.length }} events
               </p>
             </div>
           </div>
-
-          <b-modal id="create-event" size="lg" title="Create a new event"
-            ><CreateEventModal
-          /></b-modal>
-          <!-- </div> -->
         </div>
 
         <div class="row height-fixed scroll">
-          <ul ref="messages" class="col list-group">
-            <template v-for="(message, key) in messages">
-              <Message
-                :key="key"
-                :message="message"
-                :parent-th-id="thread.parentThId"
-                :get-thread="getThread"
-                :show-thread="showThread"
-              />
-            </template>
-          </ul>
+          <div class="col">
+            <MessageList
+              :messages="channelComments"
+              :get-thread="getThreadInfo"
+              :show-thread="showThread"
+            />
+          </div>
         </div>
         <div class="row">
-          <div class="col list-group">
-            <form class="form-group">
-              <div class="input-group mb-3">
-                <textarea
-                  class="form-control"
-                  placeholder="add comment"
-                ></textarea>
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary" type="button">
-                    <b-icon-cursor />
-                  </button>
-                </div>
-              </div>
-            </form>
+          <div class="col">
+            <SubmitBar :channel-id="channelId" />
           </div>
         </div>
       </div>
@@ -122,7 +106,7 @@
         <b-card title="Card Title" no-body>
           <b-card-header header-tag="nav">
             <b-nav card-header tabs>
-              <b-nav-item :active="isThread" @click="isThread = true"
+              <b-nav-item :active="isThread" @click="showThread"
                 >Thread</b-nav-item
               >
               <b-nav-item :active="!isThread" @click="isThread = false"
@@ -132,34 +116,20 @@
           </b-card-header>
 
           <b-card-body>
-            <div v-if="isThread">
-              <div class="row">
-                <ul v-if="isThread" class="col list-group height-fixed scroll">
-                  <template v-for="(message, key) in childMessages">
-                    <Message
-                      :key="key"
-                      :message="message"
-                      :parent-th-id="childThread.parentThId"
-                      :get-thread="getThread"
-                      :show-thread="(isThread = true)"
-                    />
-                  </template>
-                </ul>
+            <div v-if="isThread && threadComments">
+              <div class="row height-fixed scroll">
+                <div class="col">
+                  <Message v-if="rootMessage" :message="rootMessage" />
+                  <p class="text-muted m-0 text-center">
+                    {{ threadComments.length }}件の返信
+                  </p>
+                  <MessageList :messages="threadComments" />
+                </div>
               </div>
               <div class="row">
-                <form class="col form-group mb-0">
-                  <div class="input-group">
-                    <textarea
-                      class="form-control"
-                      placeholder="add comment"
-                    ></textarea>
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-primary" type="button">
-                        <b-icon-cursor />
-                      </button>
-                    </div>
-                  </div>
-                </form>
+                <div class="col">
+                  <SubmitBar :channel-id="channelId" />
+                </div>
               </div>
             </div>
 
@@ -190,7 +160,6 @@
 
 <script>
 import {
-  BIconCursor,
   BIconSearch,
   BIconCalendar2Event,
   BIconChatRightText,
@@ -199,7 +168,6 @@ import {
 } from 'bootstrap-vue'
 export default {
   components: {
-    BIconCursor,
     BIconSearch,
     BIconCalendar2Event,
     BIconChatRightText,
@@ -207,222 +175,94 @@ export default {
     BIconChatDots,
   },
   data: () => {
-    const date = new Date().toDateString()
     return {
       addMyChannel: false,
       isThread: false,
-      thread: {
-        thId: 1,
-        name: 'チャンネルの名前',
-        abstract: 'このチャンネルの詳細このチャンネルの詳細',
-        parentCommentId: 2,
-        parentThId: null,
-      },
-
-      messages: [
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 1,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 2,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 3,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 4,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 5,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 1,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 2,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 3,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 4,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805.pdf',
-          cmId: 5,
-          timestamp: date,
-          userId: 1,
-        },
-      ],
-      childThread: null,
-      childMessages: null,
-      events: [
-        {
-          evId: 2,
-          thId: 3,
-          hostId: 3,
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          expiredDate: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-          deleteFlag: false,
-        },
-        {
-          evId: 2,
-          thId: 3,
-          hostId: 3,
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          expiredDate: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-          deleteFlag: false,
-        },
-        {
-          evId: 2,
-          thId: 3,
-          hostId: 3,
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          expiredDate: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-          deleteFlag: false,
-        },
-        {
-          evId: 2,
-          thId: 3,
-          hostId: 3,
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          expiredDate: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-          deleteFlag: false,
-        },
-      ],
+      rootMessage: null,
+      followingUsers: [],
+      hostUserId: '',
+      channelName: '',
+      channelAbstract: '',
+      channelComments: [],
+      threadComments: null,
+      threadId: null,
+      events: [],
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.messages.scrollIntoView(false)
-    })
+  computed: {
+    channelId() {
+      return parseInt(this.$route.params.id, 10)
+    },
   },
-  computed: {},
+  created() {
+    const tmp = this.$getChannelInfo(this.channelId)
+    this.channelComments = tmp.channelComments
+    this.followingUsers = tmp.followingUsers
+    this.hostUserId = tmp.hostUserId
+    this.channelName = tmp.channelName
+    this.channelAbstract = tmp.channelAbstract
+    this.events = this.$getChannelEventInfo(this.channelId)
+  },
   methods: {
-    getThread(thId, cmId) {
-      const thread = {
-        thId: 1,
-        name: 'スレッドの名前',
-        abstract: 'このすれっどの詳細',
-        parentCommentId: 2,
-        parentThId: 2,
+    // getChannelInfo(channelId) {
+    //   // チャンネルの情報を取得
+    //   const tmpComments = []
+    //   for (let i = 0; i < 10; i++) {
+    //     tmpComments.push({
+    //       commentId: i,
+    //       timestamp: new Date().toDateString(),
+    //       userId: 'hoge',
+    //       message: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805',
+    //       childThread: { channelId: 100 + i, numOfComments: 30 },
+    //     })
+    //   }
+    //   const isRoot = true
+    //   if (isRoot === true) {
+    //     this.followingUsers = ['498', '34', '342']
+    //     this.hostUserId = '320'
+    //     this.channelName = 'machine learning'
+    //     this.channelAbstract = 'channel for student studying ml'
+    //     this.channelComments = tmpComments
+    //   }
+    // },
+    getThreadInfo(threadId, rootMessage) {
+      // スレッドの情報を取得
+      const tmpThreads = []
+      for (let i = 0; i < 10; i++) {
+        tmpThreads.push({
+          commentId: i + 100,
+          userId: 'hoge',
+          timestamp: new Date().toDateString(),
+          message: '何しようか\nhttps://www.google.com/',
+          childThread: {},
+        })
       }
-      const date = new Date().toDateString()
-      const message = [
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 1,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 2,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 3,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 4,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 5,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 1,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 2,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 3,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 4,
-          timestamp: date,
-          userId: 1,
-        },
-        {
-          msg: '何しようか\nhttps://www.google.com/',
-          cmId: 5,
-          timestamp: date,
-          userId: 1,
-        },
-      ]
-      this.childThread = thread
-      this.childMessages = message
+      const isRoot = false
+      if (isRoot === false) {
+        this.threadComments = tmpThreads
+        this.threadId = 100
+        this.rootMessage = rootMessage
+      }
     },
     showThread() {
-      this.isThread = true
+      if (this.threadComments) {
+        this.isThread = true
+      }
     },
+    // getChannelEventInfo(channelId) {
+    //   for (let i = 0; i < 10; i++) {
+    //     this.events.push({
+    //       eventId: i,
+    //       eventName: 'stydy for ml',
+    //       eventAbstract:
+    //         'event abstract\nevent abstract\nevent abstract\nevent abstract\n',
+    //       hostDate: new Date().toDateString(),
+    //       fromDate: new Date().toDateString(),
+    //       toDate: new Date().toDateString(),
+    //       zoomUrl: 'zoom.url',
+    //     })
+    //   }
+    // },
   },
 }
 </script>

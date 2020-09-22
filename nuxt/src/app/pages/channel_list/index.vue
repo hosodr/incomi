@@ -19,18 +19,6 @@
                   Search
                 </button>
               </div>
-              <!-- <input
-            class="col-10 form-control mr-sm-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button
-            class="col-2 btn btn-outline-success my-2 my-sm-0"
-            type="submit"
-          >
-            Search
-          </button> -->
             </div>
           </form>
           <div class="col">
@@ -50,7 +38,7 @@
 
         <div class="row list-group">
           <template v-for="channel in channels">
-            <ChannelItem :key="channel.id" :channel="channel" />
+            <ChannelItem :key="channel.channel.channelId" :channel="channel" />
           </template>
         </div>
       </div>
@@ -62,21 +50,11 @@
 export default {
   data: () => {
     return {
-      channels: [
-        { id: 1, abstract: '初心者のための勉強会', name: '機械学習' },
-        { id: 2, abstract: '初心者のための勉強会', name: 'Vue.js勉強会' },
-        { id: 3, abstract: '初心者のための勉強会', name: 'rails 勉強会' },
-        { id: 4, abstract: '初心者のための勉強会', name: 'react勉強会' },
-        { id: 5, abstract: '初心者のための勉強会', name: 'html' },
-        { id: 6, abstract: '初心者のための勉強会', name: 'css' },
-        { id: 7, abstract: '初心者のための勉強会', name: '機械学習' },
-        { id: 8, abstract: '初心者のための勉強会', name: 'Vue.js勉強会' },
-        { id: 9, abstract: '初心者のための勉強会', name: 'rails 勉強会' },
-        { id: 10, abstract: '初心者のための勉強会', name: 'react勉強会' },
-        { id: 11, abstract: '初心者のための勉強会', name: 'html' },
-        { id: 12, abstract: '初心者のための勉強会', name: 'css' },
-      ],
+      channels: null,
     }
+  },
+  created() {
+    this.channels = this.$getChannels()
   },
 }
 </script>

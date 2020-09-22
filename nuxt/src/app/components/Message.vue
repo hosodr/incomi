@@ -1,17 +1,27 @@
 <template>
   <div class="card border-right-0 border-left-0">
-    <div class="card-body my-0">
+    <div class="card-body py-3">
       <h6 class="card-subtitle text-muted" style="font-size: 14px">
         {{ message.timestamp }}
       </h6>
       <div class="row">
-        <div class="col-10 pr-0">
-          <autolink class="card-text" :text="message.msg" />
+        <div class="col pr-0 mb-1">
+          <autolink class="card-text" :text="message.message" />
         </div>
-        <div class="col-2 px-0">
+      </div>
+      <div class="row">
+        <div class="col pr-0">
           <a
-            v-if="parentThId === null"
-            class="my-0 float-right"
+            v-if="threadId !== null"
+            class="my-0 float-right d-none d-sm-block"
+            @click="goThread"
+          >
+            reply
+          </a>
+          <a
+            v-if="threadId !== null"
+            v-b-toggle.thread-sidebar-backdrop
+            class="my-0 float-right d-sm-none"
             @click="goThread"
           >
             reply
@@ -25,17 +35,27 @@
 <script>
 export default {
   props: {
-    message: Object,
-    parentThId: Number,
-    getThread: Function,
-    showThread: Function,
+    message: { type: Object, required: true },
+    threadId: {
+      type: Number,
+      default: null,
+    },
+    getThread: {
+      type: Function,
+      default: () => () => {},
+    },
+    showThread: {
+      type: Function,
+      default: () => () => {},
+    },
   },
   data: () => {
     return {}
   },
+  mounted() {},
   methods: {
     goThread() {
-      this.getThread(this.parentThId, this.message.cmId)
+      this.getThread(this.threadId, this.message)
       this.showThread()
     },
   },
