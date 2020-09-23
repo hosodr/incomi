@@ -56,7 +56,7 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
           event_id, event_name, event_abstract, host_user_id, channel_id, host_date, from_date, to_date, zoom_url
         }
         
-  - event参加
+ - event参加
     - POST: /events/:id/participate/:user_id
       - 作成成功時
         - {status code: 200}

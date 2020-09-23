@@ -83,15 +83,7 @@ jobs:
         with:
           python-version: '3.x'
       
-      - name: Clear previously seeded data from the database 
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: |
-            whoami
+      - run: python -c 'print("Hello")'
 
       - name: Log into Google Container Registry
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
