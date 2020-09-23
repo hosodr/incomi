@@ -83,7 +83,15 @@ jobs:
         with:
           python-version: '3.x'
       
-      - run: python -c 'print("Hello")'
+      - name: Clear previously seeded data from the database 
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script: |
+            mysql -uroot -proot_pass -h$DATABASE_IP -e "DROP DATABASE rails_app_production;"
 
       - name: Log into Google Container Registry
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
