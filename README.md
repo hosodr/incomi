@@ -43,17 +43,19 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
       - {"id":13,"channel_id":1,"name":"hoge","abstract":"fuga","zoom_url":"https://zoom.us/j/98725049091?pwd=WmNPL25WZkdyYzY4MHVIK01qTXFkdz09","host_date":"2020-10-05T00:00:00.000Z","from_date":null,"to_date":null,"is_delete":false,"created_at":"2020-09-18T13:39:10.000Z","updated_at":"2020-09-18T13:39:10.000Z"}
      
  
-  - event一覧
-    - GET: /events?channel_id={id}
+  - event一覧/検索
+    - GET: /events?channel_id={id}&word={word}
       - { 
-          {event_id, event_name, event_abstract, host_date, from,to,zoom_url},
+          "events": [
+            { "id", "channel_id", "name", "abstruct", "zoom_url", "host_date", "from_date", "to_date", "is_delete", "created_at", "update_at", "host_user_id"}
             ...
+          ]
         }
 
   - event詳細
     - GET: /events/:id
       - { 
-          event_id, event_name, event_abstract, host_user_id, channel_id, host_date, from_date, to_date, zoom_url
+             "id", "channel_id", "name", "abstruct", "zoom_url", "host_date", "from_date", "to_date", "is_delete", "created_at", "update_at", "host_user_id"
         }
         
   - event参加
@@ -62,3 +64,4 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
         - {status code: 200}
       - 作成失敗時
         - {status code: 400}
+        
