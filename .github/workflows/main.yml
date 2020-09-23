@@ -15,7 +15,7 @@ env:
   DATABASE_IP: ${{ secrets.DATABASE_IP }}
   GKE_CLUSTER: incomi
   GKE_ZONE: asia-northeast1-a
-  DEPLOYMENT_NAME: incomi-back
+  DEPLOYMENT_NAME: back
   SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
 
 jobs:
