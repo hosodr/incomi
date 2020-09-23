@@ -71,13 +71,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/pwa',
-    'nuxt-webfontloader',
   ],
-  webfontloader: {
-    google: {
-      families: ['Oxanium', 'Fredoka One'],
-    },
-  },
+
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
