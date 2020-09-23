@@ -91,7 +91,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            mysql -uroot -proot_pass -h ${{ secrets.DATABASE_IP }} -e "DROP DATABASE IF EXISTS rails_app_production;"
+            whoami
 
       - name: Log into Google Container Registry
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
