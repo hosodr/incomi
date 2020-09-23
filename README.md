@@ -37,6 +37,10 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
   - root channelの一覧取得
     - GET: /channels 
       - {"channels":[{"id":1, "name":"channel name", "abstract":"chanel abstract", "num_of_comments":1, "num_of_events":1},...,{}]} 
+- comments
+  - comment投稿
+    - POST: /comments -H Contet-Type: application/json -d {"user_id":1, "channel_id":1, "message": "hogehoge"}
+      - {"id":13,"user_id":1,"channel_id":1,"message":"hogehoge","created_at":"2020-09-23T09:01:45.000Z","updated_at":"2020-09-23T09:01:45.000Z","url":"http://localhost:3000/comments/13.json"}
 - events
   - event作成
     - POST: /events -H application:json -d {"name":"hoge", "abstract":"fuga", "channel_id":1, "host_user_id":2,"host_date":"2020-10-05 00:00:00","from_date":"2020-10-05 00:00:00","to_date":"2020-10-05 00:00:00"}
