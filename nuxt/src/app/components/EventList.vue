@@ -52,12 +52,14 @@ export default {
   },
   methods: {
     async searchEvent() {
-      this.eventSearchResult = await fetch('/api/events/', {
-        params: {
-          channel_id: this.channelId,
-          word: this.keyword,
-        },
-      })
+      this.eventSearchResult = await this.$axios
+        .get('/api/events.json', {
+          params: {
+            channel_id: this.channelId,
+            word: this.keyword,
+          },
+        })
+        .then((res) => res.data.events)
     },
   },
 }

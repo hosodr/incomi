@@ -197,12 +197,12 @@ export default {
     BIconChatDots,
   },
   async fetch() {
-    this.events = await fetch(
-      '/api/events?channel_id=' + this.$route.params.id
-    ).then((res) => res.json())
-    this.channelComments = await fetch(
-      '/api/comments/' + this.$route.params.id
-    ).then((res) => res.json())
+    this.events = await this.$axios
+      .get('/api/events.json?channel_id=' + this.$route.params.id)
+      .then((res) => res.data.events)
+    this.channelComments = await this.$axios
+      .get('/api/comments/' + this.$route.params.id + '.json')
+      .then((res) => [res.data])
   },
   data: () => {
     return {
@@ -233,7 +233,7 @@ export default {
     this.hostUserId = tmp.hostUserId
     this.channelName = tmp.channelName
     this.channelAbstract = tmp.channelAbstract
-    this.events = this.$getChannelEventInfo(this.channelId)
+    // this.events = this.$getChannelEventInfo(this.channelId)
   },
   methods: {
     // getChannelInfo(channelId) {

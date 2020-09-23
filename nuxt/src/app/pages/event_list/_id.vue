@@ -92,9 +92,9 @@ export default {
     BIconPerson,
   },
   async fetch() {
-    this.event = await fetch(
-      '/api/events/' + this.$route.params.id
-    ).then((res) => res.json())
+    this.event = await this.$axios
+      .get('/api/events/' + this.$route.params.id + '.json')
+      .then((res) => res.data)
   },
   data: () => {
     const date = new Date().toDateString()
