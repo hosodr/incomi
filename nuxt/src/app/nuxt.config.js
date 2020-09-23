@@ -83,7 +83,7 @@ export default {
 
   proxy: {
     '/api/': {
-      target: 'http://back:3000',
+      target: process.env.API_URL || 'http://back:3000',
       pathRewrite: { '^/api/': '' },
     },
   },

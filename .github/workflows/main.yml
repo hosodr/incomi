@@ -57,7 +57,7 @@ jobs:
         working-directory: ./nuxt/src/app
         run: |
           yarn install
-          yarn run generate
+          API_URL=${{ secrets.API_URL }} yarn run generate
       
       - name: Deploy frontend to Firebase
         uses: w9jds/firebase-action@v1.5.0
@@ -139,6 +139,7 @@ jobs:
         run: |
           ls -la
           kubectl apply -f ./ktmp
+          kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get deployment,svc,pods,pvc
 
           
