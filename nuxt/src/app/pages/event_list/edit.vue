@@ -5,9 +5,9 @@
         <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
         <div class="col-sm-10">
           <input
+            id="inputEmail3"
             type="email"
             class="form-control"
-            id="inputEmail3"
             placeholder="Email"
           />
         </div>
@@ -18,9 +18,9 @@
         >
         <div class="col-sm-10">
           <input
+            id="inputPassword3"
             type="password"
             class="form-control"
-            id="inputPassword3"
             placeholder="Password"
           />
         </div>
@@ -31,10 +31,10 @@
           <div class="col-sm-10">
             <div class="form-check">
               <input
+                id="gridRadios1"
                 class="form-check-input"
                 type="radio"
                 name="gridRadios"
-                id="gridRadios1"
                 value="option1"
                 checked
               />
@@ -44,10 +44,10 @@
             </div>
             <div class="form-check">
               <input
+                id="gridRadios2"
                 class="form-check-input"
                 type="radio"
                 name="gridRadios"
-                id="gridRadios2"
                 value="option2"
               />
               <label class="form-check-label" for="gridRadios2">
@@ -56,10 +56,10 @@
             </div>
             <div class="form-check disabled">
               <input
+                id="gridRadios3"
                 class="form-check-input"
                 type="radio"
                 name="gridRadios"
-                id="gridRadios3"
                 value="option3"
                 disabled
               />
@@ -74,7 +74,7 @@
         <div class="col-sm-2">Checkbox</div>
         <div class="col-sm-10">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck1" />
+            <input id="gridCheck1" class="form-check-input" type="checkbox" />
             <label class="form-check-label" for="gridCheck1">
               Example checkbox
             </label>

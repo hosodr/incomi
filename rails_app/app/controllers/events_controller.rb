@@ -5,17 +5,40 @@ require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
-  # GET /events
+  # GET /events?channel_id={id}
   # GET /events.json
   def index
-    @events = Event.all
+    if params[:channel_id] == nil
+      events = Event.all
+    else
+      events = Event.where(channel_id: params[:channel_id])
+    end
+    render json: events
   end
 
+  #イベント詳細を表示するAPI(getEventInfo(eventID))
   # GET /events/1
   # GET /events/1.json
   def show
+    render json: @event
   end
 
+  #ログイン中のユーザーがイベントに参加するAPI
+  #POST events/:id/participate/:user_id
+  def participate
+    #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
+    #user = current_user
+    #ユーザー認証をつけない場合は受け取ったidのユーザーを登録
+    user = User.find(params[:user_id])
+    participant = Participation.new(user_id: params[:user_id], event_id: params[:id])
+    if participant.save
+      render status: :ok, json: { status: :ok }
+    else
+      render status: :bad_request, json: { status: :bad_request }
+    end
+  end
+    
+  end
   # GET /events/new
   def new
     @event = Event.new

@@ -1,0 +1,136 @@
+name: Main Deployment
+
+on:
+  push:
+    branches:
+      - develop
+
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  REGISTRY_HOST: https://asia.gcr.io
+  PROJECT_ID: incomi
+  REGISTRY_URL: asia.gcr.io/incomi
+  DATABASE_IP: ${{ secrets.DATABASE_IP }}
+  GKE_CLUSTER: incomi
+  GKE_ZONE: asia-northeast1-a
+  DEPLOYMENT_NAME: incomi-back
+  SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  # test:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - name: Run tests
+  #       run: |
+  #         if [ -f docker-compose.test.yml ]; then
+  #           docker-compose --file docker-compose.test.yml build
+  #           docker-compose --file docker-compose.test.yml run sut
+  #         else
+  #           docker build . --file Dockerfile
+  #         fi
+
+  deploy_front:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - run: python -c 'print("Hello")'
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Build frontend as static HTML files using nuxt generate
+        working-directory: ./nuxt/src/app
+        run: |
+          yarn install
+          yarn run generate
+      
+      - name: Deploy frontend to Firebase
+        uses: w9jds/firebase-action@v1.5.0
+        with:
+          args: deploy --only hosting
+          name: incomi
+          path: dist
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: ./nuxt/src/app
+
+  deploy_back:
+    # Ensure test job passes before pushing image.
+    # needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - run: python -c 'print("Hello")'
+
+      - name: Log into Google Container Registry
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: incomi
+          service_account_key: ${{ secrets.GCR_JSON }}
+          export_default_credentials: true
+      - run: | 
+          gcloud --quiet auth configure-docker
+      
+      - name: Build images
+        run: |
+          echo ::set-env name=REGISTRY_URL::$(echo $REGISTRY_URL)
+          echo ::set-env name=DATABASE_IP::$(echo $DATABASE_IP)
+          echo ::set-env name=SECRET_KEY_BASE::$(echo $SECRET_KEY_BASE)
+          envsubst < docker-compose-prod.yml > docker-compose-prod-complete.yml
+          # gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin $REGISTRY_HOST
+          docker-compose -f docker-compose-prod-complete.yml build 
+
+      - name: Push image to Google Container Registry
+        run: docker-compose -f docker-compose-prod-complete.yml push
+      
+      - run: cat docker-compose-prod-complete.yml 
+
+      - name: Install Kompose
+        run: |
+          curl -L https://github.com/kubernetes/kompose/releases/download/v1.19.0/kompose-linux-amd64 -o kompose          
+          chmod +x kompose
+          sudo mv ./kompose /usr/local/bin/kompose
+      
+      - name: Use Kompose to convert our docker-compose to k8s resource files
+        run: |
+          mkdir ktmp
+          cd ktmp
+          kompose convert -f ../docker-compose-prod-complete.yml
+          cat back-service.yaml
+          cat back-deployment.yaml
+      
+      - name: Get k8s credentials from GCP
+        run: |
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      
+      - name: Apply the resource files to our cluster
+        run: |
+          ls -la
+          kubectl apply -f ./ktmp
+          kubectl get deployment,svc,pods,pvc
+
+          

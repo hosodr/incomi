@@ -55,7 +55,10 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="channel in channels">
-              <ChannelItem :key="channel.id" :channel="channel" />
+              <ChannelItem
+                :key="channel.channel.channelId"
+                :channel="channel"
+              />
             </template>
           </div>
         </div>
@@ -70,7 +73,7 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="event in events">
-              <EventItem :key="event.id" :event="event" />
+              <EventItem :key="event.eventId" :event="event" />
             </template>
           </div>
         </div>
@@ -85,7 +88,10 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="channel in channels">
-              <ChannelItem :key="channel.id" :channel="channel" />
+              <ChannelItem
+                :key="channel.channel.chanenldId"
+                :channel="channel"
+              />
             </template>
           </div>
         </div>
@@ -100,7 +106,7 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="event in events">
-              <EventItem :key="event.id" :event="event" />
+              <EventItem :key="event.eventId" :event="event" />
             </template>
           </div>
         </div>
@@ -131,55 +137,13 @@ export default {
       numOfHostEvent: 20,
       numOfFollowChannel: 222,
       numOfAttendEvent: 213,
-      channels: [
-        { id: 1, abstract: '初心者のための勉強会', name: '機械学習' },
-        { id: 2, abstract: '初心者のための勉強会', name: 'Vue.js勉強会' },
-        { id: 3, abstract: '初心者のための勉強会', name: 'rails 勉強会' },
-        { id: 4, abstract: '初心者のための勉強会', name: 'react勉強会' },
-        { id: 5, abstract: '初心者のための勉強会', name: 'html' },
-        { id: 6, abstract: '初心者のための勉強会', name: 'css' },
-        { id: 7, abstract: '初心者のための勉強会', name: '機械学習' },
-        { id: 8, abstract: '初心者のための勉強会', name: 'Vue.js勉強会' },
-        { id: 9, abstract: '初心者のための勉強会', name: 'rails 勉強会' },
-        { id: 10, abstract: '初心者のための勉強会', name: 'react勉強会' },
-        { id: 11, abstract: '初心者のための勉強会', name: 'html' },
-        { id: 12, abstract: '初心者のための勉強会', name: 'css' },
-      ],
-      events: [
-        {
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-        },
-        {
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-        },
-        {
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-        },
-        {
-          name: '機械学習勉強会',
-          abstract: '初心者のための機械学習勉強会です',
-          zoomUrl: 'zoom.url',
-          datetime: new Date().toDateString(),
-          from: new Date().toDateString(),
-          to: new Date().toDateString(),
-        },
-      ],
+      channels: [],
+      events: [],
     }
+  },
+  created() {
+    this.events = this.$getChannelEventInfo(1)
+    this.channels = this.$getChannels()
   },
 }
 </script>
