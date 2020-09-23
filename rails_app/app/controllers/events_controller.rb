@@ -8,11 +8,13 @@ class EventsController < ApplicationController
   # GET /events?channel_id={id}
   # GET /events.json
   def index
+    events = Hash.new
     if params[:channel_id] == nil
-      events = Event.all.order(:host_date)
+      res = Event.all.order(:host_date)
     else
-      events = Event.where(channel_id: params[:channel_id]).order(:host_date)
+      res = Event.where(channel_id: params[:channel_id]).order(:host_date)
     end
+    events["events"] = res.to_a
     render json: events
   end
 
@@ -20,7 +22,9 @@ class EventsController < ApplicationController
   # GET /events/search?word={}
   def search
     search_word = params[:word]
-    events = Event.all.where('name LIKE ?', "%#{search_word}%").order(:host_date)
+    events = Hash.new
+    res = Event.all.where('name LIKE ?', "%#{search_word}%").order(:host_date)
+    events["events"] = res.to_a
     render json: events
   end
 
