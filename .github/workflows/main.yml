@@ -17,6 +17,7 @@ env:
   GKE_ZONE: asia-northeast1-a
   DEPLOYMENT_NAME: back
   SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+  API_URL: ${{ secrets.API_URL }} 
 
 jobs:
   # Run tests.
@@ -56,8 +57,9 @@ jobs:
       - name: Build frontend as static HTML files using nuxt generate
         working-directory: ./nuxt/src/app
         run: |
+          echo API_URL=${{ secrets.API_URL }} > .env
           yarn install
-          API_URL=${{ secrets.API_URL }} yarn run generate
+          yarn run generate
       
       - name: Deploy frontend to Firebase
         uses: w9jds/firebase-action@v1.5.0
@@ -92,6 +94,7 @@ jobs:
           port: 22
           script: |
             whoami
+            mysql -uroot -proot_pass -h ${{ secrets.DATABASE_IP }} -e "DROP DATABASE IF EXISTS rails_app_production;"
 
       - name: Log into Google Container Registry
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -137,9 +140,7 @@ jobs:
       
       - name: Apply the resource files to our cluster
         run: |
-          ls -la
           kubectl apply -f ./ktmp
+          kubectl rollout restart deployment/$DEPLOYMENT_NAME
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get deployment,svc,pods,pvc
-
-          
