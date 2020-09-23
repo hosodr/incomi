@@ -56,8 +56,6 @@ class ChannelsController < ApplicationController
     else 
       render status: 400, json: { status: 400 }
     end
-
-    @channel.save
   end
 
   # PATCH/PUT /channels/1
