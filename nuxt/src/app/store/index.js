@@ -3,9 +3,14 @@ import Vuex from 'vuex'
 const store = () =>
   new Vuex.Store({
     state: {
-      username: '',
+      username: 'hoge',
+      userId: 'hoge',
     },
-    getters: {},
+    getters: {
+      isSignin(state) {
+        return state.username !== null && state.userId !== null
+      },
+    },
     mutations: {
       storeUsername(state, username) {
         state.username = username

@@ -4,35 +4,39 @@
       <div class="col-md-10">
         <div class="card mt-5">
           <div class="card-header">
-            <h5 class="float-left">{{ event.name }}</h5>
-            <template v-if="false">
-              <nuxt-link class="float-right my-0 text-danger" to="id/edit"
-                >delete</nuxt-link
-              >
-              <nuxt-link class="float-right my-0 mr-5" to="id/edit"
-                >modify</nuxt-link
-              >
-            </template>
-            <template v-else>
-              <div
-                v-if="!join"
-                type="button"
-                class="float-right btn btn-sm btn-primary"
-                @click="join = !join"
-              >
-                <b-icon-person-check />
-                attend this meeting
+            <div class="row">
+              <h5 class="col-md-7 mb-0 d-flex align-items-center">
+                {{ event.name }}
+              </h5>
+              <div class="col-md-5">
+                <template v-if="false">
+                  <nuxt-link class="my-0 text-danger" to="id/edit"
+                    >delete</nuxt-link
+                  >
+                  <nuxt-link class="my-0 mr-5" to="id/edit">modify</nuxt-link>
+                </template>
+                <template v-else>
+                  <div
+                    v-if="!join"
+                    type="button"
+                    class="btn btn-sm btn-default border-dark rounded"
+                    @click="join = !join"
+                  >
+                    <b-icon-person-check />
+                    attend
+                  </div>
+                  <div
+                    v-else
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    @click="join = !join"
+                  >
+                    <b-icon-person />
+                    attending
+                  </div>
+                </template>
               </div>
-              <div
-                v-else
-                type="button"
-                class="float-right btn btn-sm btn-danger"
-                @click="join = !join"
-              >
-                <b-icon-x-circle />
-                cancel attending
-              </div>
-            </template>
+            </div>
           </div>
           <div class="card-body">
             <p class="card-text">
@@ -78,11 +82,11 @@
 </template>
 
 <script>
-import { BIconXCircle, BIconPersonCheck } from 'bootstrap-vue'
+import { BIconPersonCheck, BIconPerson } from 'bootstrap-vue'
 export default {
   components: {
-    BIconXCircle,
     BIconPersonCheck,
+    BIconPerson,
   },
   data: () => {
     const date = new Date().toDateString()
@@ -111,5 +115,6 @@ export default {
       ],
     }
   },
+  methods: {},
 }
 </script>
