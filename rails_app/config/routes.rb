@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  get 'events/search', to: 'events#search'
-  post 'events/:id/participate/:user_id', to: 'events#participate'
   resources :events
+  post 'events/:id/participate/:user_id', to: 'events#participate'
+  
   resources :comments
   resources :channels
   resources :users
