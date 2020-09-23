@@ -45,7 +45,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # DELETE /events/new
   #イベント参加をキャンセルするAPI
   #delete events/:id/cancel/:user_id
   #author naya
@@ -59,6 +58,7 @@ class EventsController < ApplicationController
     end
   end
 
+  # GET /events/new
   def new
     @event = Event.new
   end
