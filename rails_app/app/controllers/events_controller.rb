@@ -7,6 +7,7 @@ class EventsController < ApplicationController
 
   # GET /events?channel_id={id}&word={}
   # GET /events.json
+  #author naya
   def index
     events = Hash.new
     if params[:channel_id] == nil
@@ -23,12 +24,14 @@ class EventsController < ApplicationController
   #イベント詳細を表示するAPI(getEventInfo(eventID))
   # GET /events/1
   # GET /events/1.json
+  #author naya
   def show
     render json: @event
   end
 
   #ログイン中のユーザーがイベントに参加するAPI
   #POST events/:id/participate/:user_id
+  #author naya
   def participate
     #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
     #user = current_user
@@ -42,7 +45,20 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/new
+  # DELETE /events/new
+  #イベント参加をキャンセルするAPI
+  #delete events/:id/cancel/:user_id
+  #author naya
+  def cancel
+    participant = Participation.find_by(user_id: params[:user_id], event_id: params[:id])
+    if participant != nil 
+      participant.destroy
+      render status: :ok, json: { status: :ok }
+    else
+      render status: :bad_request, json: { status: :bad_request }
+    end
+  end
+
   def new
     @event = Event.new
   end
