@@ -44,6 +44,7 @@ class ChannelsController < ApplicationController
 
   # POST /channels
   # POST /channels.json
+  # author yusuke otsuki
   def create
     @channel = Channel.new(channel_params)
 
