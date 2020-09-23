@@ -74,6 +74,18 @@
 
 <script>
 export default {
+  props: {
+    channelId: {
+      id: 0,
+      type: Number,
+      required: true,
+    },
+    hostUserId: {
+      id: 0,
+      type: Number,
+      required: true,
+    },
+  },
   data: () => {
     return {
       eventName: '',
@@ -82,6 +94,7 @@ export default {
       eventTime: '',
       startDate: '',
       endDate: '',
+      created: false,
     }
   },
   computed: {
@@ -98,11 +111,22 @@ export default {
     },
   },
   methods: {
-    submit() {
-      this.$router.replace('1')
-    },
-    cancel() {
-      this.$router.back()
+    async submit() {
+      try {
+        await this.$axios.post('/api/events.json', {
+          name: this.eventName,
+          abstract: this.eventDescription,
+          channel_id: this.channelId,
+          host_user_id: this.hostUserId,
+          host_date: this.eventDateTime,
+          from_date: this.startDate,
+          to_date: this.endDate,
+        })
+        this.created = true
+      } catch {
+        this.created = false
+      }
+      return this.created
     },
   },
 }

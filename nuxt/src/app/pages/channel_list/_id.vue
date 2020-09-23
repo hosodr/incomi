@@ -6,9 +6,27 @@
       :thread-id="threadId"
     />
     <EventSideBar :events="events" />
-    <b-modal id="create-event" size="lg" title="Create a new event"
+    <b-modal
+      id="create-event"
+      size="lg"
+      title="Create a new event"
+      @ok="afterCreateEvent()"
       ><CreateEventModal
+        ref="createEventModal"
+        :channel-id="channelId"
+        :host-user-id="hostUserId"
     /></b-modal>
+    <div class="row mt-3">
+      <b-alert
+        :show="dismissCountDown"
+        dismissible
+        variant="danger"
+        @dismissed="dismissCountDown = 0"
+        @dismiss-count-down="countDownChanged"
+      >
+        Error creating a new event
+      </b-alert>
+    </div>
     <div class="row mt-3">
       <div class="col-md-8">
         <div class="row card-header pb-0">
@@ -147,7 +165,11 @@
               </div>
               <div class="row justify-content-center height-fixed scroll">
                 <template v-for="event in events">
-                  <EventItem :key="event.id" :event="event" />
+                  <EventItem
+                    :key="event.id"
+                    :event="event"
+                    :channel-id="channelId"
+                  />
                 </template>
               </div>
             </div>
@@ -174,6 +196,14 @@ export default {
     BIconPeople,
     BIconChatDots,
   },
+  async fetch() {
+    this.events = await fetch(
+      '/api/events?channel_id=' + this.$route.params.id
+    ).then((res) => res.json())
+    this.channelComments = await fetch(
+      '/api/comments/' + this.$route.params.id
+    ).then((res) => res.json())
+  },
   data: () => {
     return {
       addMyChannel: false,
@@ -184,9 +214,11 @@ export default {
       channelName: '',
       channelAbstract: '',
       channelComments: [],
-      threadComments: null,
+      threadComments: [],
       threadId: null,
       events: [],
+      newEventCreated: 0,
+      dismissCountDown: 0,
     }
   },
   computed: {
@@ -247,6 +279,19 @@ export default {
     showThread() {
       if (this.threadComments) {
         this.isThread = true
+      }
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+      this.newEventCreated = 0
+    },
+    afterCreateEvent() {
+      if (this.$refs.createEventModal.submit()) {
+        this.newEventCreated = 1
+        this.dismissCountDown = 5
+      } else {
+        this.newEventCreated = 2
+        this.dismissCountDown = 5
       }
     },
     // getChannelEventInfo(channelId) {

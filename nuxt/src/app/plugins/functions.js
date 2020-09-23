@@ -13,7 +13,7 @@ Vue.prototype.$getChannelInfo = (channelId) => {
     })
   }
   const followingUsers = ['498', '34', '342']
-  const hostUserId = '320'
+  const hostUserId = '1'
   const channelName = 'machine learning'
   const channelAbstract = 'channel for student studying ml'
   return {
