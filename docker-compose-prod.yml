@@ -11,7 +11,7 @@ services:
          - DATABASE_IP=$DATABASE_IP
          - SECRET_KEY_BASE=$SECRET_KEY_BASE
         build: rails_app
-        command: bash -c "bundle exec rails db:create && bundle exec rails db:migrate && rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+        command: bash -c "bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails db:seed && rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
         container_name: app_container
         ports: 
             - 80:3000

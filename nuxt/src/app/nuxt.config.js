@@ -45,6 +45,9 @@ export default {
     {
       src: '~/plugins/autolink.js',
     },
+    {
+      src: '~/plugins/functions.js',
+    },
   ],
   /*
    ** Auto import components
@@ -69,6 +72,7 @@ export default {
     '@nuxtjs/proxy',
     '@nuxtjs/pwa',
   ],
+
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
