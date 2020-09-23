@@ -9,10 +9,18 @@ class EventsController < ApplicationController
   # GET /events.json
   def index
     if params[:channel_id] == nil
-      events = Event.all
+      events = Event.all.order(:host_date)
     else
-      events = Event.where(channel_id: params[:channel_id])
+      events = Event.where(channel_id: params[:channel_id]).order(:host_date)
     end
+    render json: events
+  end
+
+  #イベントの検索をするAPI
+  # GET /events/search?word={}
+  def search
+    search_word = params[:word]
+    events = Event.all.where('name LIKE ?', "%#{search_word}%").order(:host_date)
     render json: events
   end
 
