@@ -28,3 +28,5 @@ COPY . $APP_HOME
 ENTRYPOINT ["prehook", "bundle install", "--"]
 
 EXPOSE  3000
+
+# author: Hosoda Kyohei

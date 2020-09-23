@@ -1,0 +1,1 @@
+Files in this directory were created by Rails and fixed by Hosoda Kyohei.

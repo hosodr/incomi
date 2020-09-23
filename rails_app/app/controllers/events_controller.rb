@@ -48,6 +48,7 @@ class EventsController < ApplicationController
   end
 
   # 100urls/24hours can be generated
+  # author: HOsoda Kyohei
   def access
     uri = URI.parse(MEETING_URL)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -66,6 +67,7 @@ class EventsController < ApplicationController
 
   # POST /events
   # POST /events.json
+  # Hosoda Kyohei
   def create
     zoom_url = access
     params[:event][:zoom_url] = zoom_url
@@ -110,6 +112,7 @@ class EventsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
+    # fixed by Hosoda Kyohei
     def event_params
       params.require(:event).permit(:channel_id, :name, :abstract, :zoom_url, :host_date, :from_date, :to_date, :is_delete, :host_user_id)
     end

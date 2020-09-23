@@ -3,6 +3,7 @@ class ChannelsController < ApplicationController
 
   # GET /channels
   # GET /channels.json
+  # author: Hosoda Kyohei
   def index
     sql = """
     select comment_count.id, name, abstract, num_of_comments, num_of_events
