@@ -54,7 +54,7 @@ class EventsController < ApplicationController
       participant.destroy
       render status: :ok, json: { status: :ok }
     else
-      render status: :bad_request, json: { status: :bad_request }
+      render status: :no_content, json: { status: :no_content }
     end
   end
 
