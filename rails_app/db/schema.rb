@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200917134907) do
+ActiveRecord::Schema.define(version: 20200923150948) do
 
   create_table "channels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -67,9 +67,14 @@ ActiveRecord::Schema.define(version: 20200917134907) do
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "email"
-    t.string   "password_digest"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+    t.string   "provider",                            default: "email", null: false
+    t.string   "uid",                                 default: "",      null: false
+    t.text     "tokens",                limit: 65535
+    t.string   "encrypted_password",                  default: "",      null: false
+    t.boolean  "allow_password_change",               default: false
+    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
   end
 
   add_foreign_key "channels", "channels", column: "parent_channel_id"
