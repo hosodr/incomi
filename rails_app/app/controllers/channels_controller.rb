@@ -46,16 +46,18 @@ class ChannelsController < ApplicationController
   # POST /channels.json
   def create
     @channel = Channel.new(channel_params)
+    @channel.name = params[:name]
+    @channel.abstract = params[:abstract]
+    @channel.parent_channel_id = params[:parentChannelId]
+    @channel.parent_comment_id = params[:parentCommentId]
 
-    respond_to do |format|
-      if @channel.save
-        format.html { redirect_to @channel, notice: 'Channel was successfully created.' }
-        format.json { render :show, status: :created, location: @channel }
-      else
-        format.html { render :new }
-        format.json { render json: @channel.errors, status: :unprocessable_entity }
-      end
+    if @channel.save
+      render status: 200, json: { status: 200 }
+    else 
+      render status: 400, json: { status: 400 }
     end
+
+    @channel.save
   end
 
   # PATCH/PUT /channels/1
