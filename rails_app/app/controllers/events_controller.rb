@@ -51,7 +51,7 @@ class EventsController < ApplicationController
   #author naya
   def cancel
     participant = Participation.find_by(user_id: params[:user_id], event_id: params[:id])
-    if participant != nil 
+    if participant != nil
       participant.destroy
       render status: :ok, json: { status: :ok }
     else
