@@ -71,8 +71,21 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/pwa',
+    'nuxt-webfontloader',
   ],
-
+  webfontloader: {
+    google: {
+      families: [
+        'Designed by LatinoType',
+        'Acme',
+        'Balsamiq Sans',
+        'Rammetto One',
+        'Skranji',
+        'Londrina Solid',
+        'Fredoka One',
+      ],
+    },
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options

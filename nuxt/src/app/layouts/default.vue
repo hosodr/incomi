@@ -9,7 +9,8 @@
 
 <style>
 .incomi {
-  font-family: 'Fredoka One', 'Oxanium', sans-serif;
+  font-family: 'Rammetto One', 'Skranji', 'Londrina Solid', 'Fredoka One',
+    sans-serif;
 }
 .scroll {
   overflow-y: auto;
