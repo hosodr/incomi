@@ -41,5 +41,24 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
   - event作成
     - POST: /events -H application:json -d {"name":"hoge", "abstract":"fuga", "channel_id":1, "host_user_id":2,"host_date":"2020-10-05 00:00:00","from_date":"2020-10-05 00:00:00","to_date":"2020-10-05 00:00:00"}
       - {"id":13,"channel_id":1,"name":"hoge","abstract":"fuga","zoom_url":"https://zoom.us/j/98725049091?pwd=WmNPL25WZkdyYzY4MHVIK01qTXFkdz09","host_date":"2020-10-05T00:00:00.000Z","from_date":null,"to_date":null,"is_delete":false,"created_at":"2020-09-18T13:39:10.000Z","updated_at":"2020-09-18T13:39:10.000Z"}
-    
+     
+ 
+  - event一覧
+    - GET: /events?channel_id={id}
+      - { 
+          {event_id, event_name, event_abstract, host_date, from,to,zoom_url},
+            ...
+        }
 
+  - event詳細
+    - GET: /events/:id
+      - { 
+          event_id, event_name, event_abstract, host_user_id, channel_id, host_date, from_date, to_date, zoom_url
+        }
+        
+ - event参加
+    - POST: /events/:id/participate/:user_id
+      - 作成成功時
+        - {status code: 200}
+      - 作成失敗時
+        - {status code: 400}
