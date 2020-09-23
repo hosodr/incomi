@@ -75,7 +75,15 @@ export default {
   ],
   webfontloader: {
     google: {
-      families: ['Fredoka One', 'Oxanium'],
+      families: [
+        'Designed by LatinoType',
+        'Acme',
+        'Balsamiq Sans',
+        'Rammetto One',
+        'Skranji',
+        'Londrina Solid',
+        'Fredoka One',
+      ],
     },
   },
   /*

@@ -2,33 +2,35 @@
   <div>
     <div class="jumbotron mb-0">
       <h1 class="display-4 incomi">incomi</h1>
-      <p class="lead">雑談・勉強会を気軽に</p>
+      <p class="lead">Let's unleash your thirst for knowledge</p>
     </div>
 
     <div class="container py-5">
       <div class="row justify-content-center">
-        <h2 class="text-center">勉強に困ってませんか？</h2>
+        <h2 class="text-center">
+          Let's 「learn」「talk」「connect」 more about IT
+        </h2>
       </div>
       <div class="row justify-content-center">
         <ul>
-          <li>ある話題について誰かと話したい...</li>
-          <li>slackのワークスペースなど既成のコミュニティには入りづらい...</li>
-          <li>connpassの勉強会に参加するのは敷居が高い...</li>
+          <li>I want to learn about new technology</li>
+          <li>
+            I want to talk with people who are interested in the same field
+          </li>
+          <li>I want to do something by connecting with other engineers</li>
         </ul>
       </div>
     </div>
     <div class="py-5" style="background-color: #4b64a1; color: white">
       <div class="container">
         <div class="row justify-content-center">
-          <h2 class="text-center">3つの機能</h2>
+          <h2 class="text-center">Three Functions</h2>
         </div>
         <div class="row justify-content-center">
           <div class="col-md-3 text-center">
             <img class="my-3" src="@/assets/anonymous.svg" height="100px" />
-            <h4>匿名投稿</h4>
-            <p>
-              匿名投稿により，既に出来上がっているコミュニティへの参加の敷居が低くなります
-            </p>
+            <h4>Anonymous post</h4>
+            <p>Feel free to talk and listen to any community.</p>
           </div>
           <div class="col-md-3 text-center">
             <b-icon
@@ -37,9 +39,10 @@
               style="width: 100px; height: 100px"
             ></b-icon>
 
-            <h4>チャット機能</h4>
+            <h4>Chat function</h4>
             <p>
-              自分の趣味に合うチャンネルを登録し，気軽にチャットが楽しめます
+              You can register a channel that matches your interests and enjoy
+              chatting easily.
             </p>
           </div>
           <div class="col-md-3 text-center">
@@ -48,11 +51,10 @@
               icon="calendar2-event"
               style="width: 100px; height: 100px"
             ></b-icon>
-            <h4>イベント作成機能</h4>
+            <h4>Creating Events</h4>
             <p>
-              話が深まってきたら勉強会を開催してみましょう．<span class="incomi"
-                >incomi</span
-              >ならば簡単にzoomを用いた勉強会を作成できます
+              If you are interested in the topic, let's hold a study group.
+              incomi can help you create a study group with zoom.
             </p>
           </div>
         </div>
