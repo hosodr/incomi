@@ -88,7 +88,7 @@
 
             <div class="row">
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
-                <b-icon-people />{{ followingUsers.length }} people
+                <b-icon-people />{{ followingUsers.length }} followers
               </p>
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
                 <b-icon-chat-dots />{{ channelComments.length }} comments
@@ -139,7 +139,7 @@
                     :repliable="false"
                   />
                   <p class="text-muted m-0 text-center">
-                    {{ threadComments.length }}件の返信
+                    {{ threadComments.length }} replies
                   </p>
                   <MessageList :messages="threadComments" :repliable="false" />
                 </div>
@@ -229,6 +229,7 @@ export default {
       const url = `/api/comments/channel/${threadId}.json`
       this.$axios.get(url).then((res) => {
         this.threadComments = res.data.comments
+        console.log('thread', this.threadComments)
       })
       this.rootMessage = rootMessage
     },
@@ -264,9 +265,6 @@ export default {
       const url = `/api/comments/channel/${channelId}.json`
       this.$axios.get(url).then((res) => {
         const data = res.data.comments
-        for (let i = 0; i < data.length; i++) {
-          data[i].child_channel_id = 1
-        }
         this.channelComments = data
         // channel_id: 1
         // child_channel_id: null

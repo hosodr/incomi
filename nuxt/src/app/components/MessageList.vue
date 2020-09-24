@@ -1,5 +1,5 @@
 <template>
-  <ul v-if="messages" ref="messages" class="list-group">
+  <ul v-if="messages !== null" ref="messages" class="list-group">
     <template v-for="(message, key) in messages">
       <Message
         :key="key"
