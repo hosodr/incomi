@@ -34,11 +34,11 @@ class ChannelsController < ApplicationController
   def show
     respond_to do |format|
       begin
-        channel = Channel.find(params[:id])
+        @channel = Channel.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         format.json { render json: :not_found, status: :not_found }
       end
-      format.json {render :info, status: :ok, location: channel}
+      format.json {render :info, status: :ok, location: @channel}
     end
   end
 
