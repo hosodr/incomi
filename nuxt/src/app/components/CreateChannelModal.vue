@@ -1,108 +1,88 @@
 <template>
-  <div class="container">
-    <form>
-      <div class="form-group row">
-        <label class="col-lg-2 col-form-label" for="eventName">
-          Event Name
-        </label>
-        <div class="col-lg-10">
-          <input
-            id="eventName"
-            v-model="eventName"
-            type="text"
-            class="form-control"
-            placeholder="a cool name for your event"
-          />
+  <b-modal
+    id="create-channel"
+    size="lg"
+    title="Create a new channel"
+    @ok="submit"
+  >
+    <div class="container">
+      <form>
+        <div class="form-group row">
+          <label class="col-lg-2 col-form-label" for="channelName">
+            Channel Name
+          </label>
+          <div class="col-lg-10">
+            <input
+              id="channelName"
+              v-model="channelName"
+              type="text"
+              class="form-control"
+              placeholder="a cool name for your channel"
+            />
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-lg-2 col-form-label" for="eventDescription">
-          Description
-        </label>
-        <div class="col-lg-10">
-          <input
-            id="eventDescription"
-            v-model="eventDescription"
-            type="text"
-            class="form-control"
-            placeholder="a short description for your event"
-          />
+        <div class="form-group row">
+          <label class="col-lg-2 col-form-label" for="channelAbstract">
+            Description
+          </label>
+          <div class="col-lg-10">
+            <input
+              id="channelAbstract"
+              v-model="channelAbstract"
+              type="text"
+              class="form-control"
+              placeholder="a short description for your channel"
+            />
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-lg-2 col-form-label" for="eventDatePicker">
-          Event Date
-        </label>
-        <div class="col-lg-6">
-          <b-form-datepicker
-            id="eventDatePicker"
-            v-model="eventDate"
-            :min="today"
-          ></b-form-datepicker>
-        </div>
-        <div class="col-lg-4">
-          <b-form-timepicker
-            v-model="eventTime"
-            locale="en"
-          ></b-form-timepicker>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-lg-2 col-form-label" for="startDatePicker">
-          Period
-        </label>
-        <div class="col-lg-5">
-          <b-form-datepicker
-            id="startDatePicker"
-            v-model="startDate"
-            :min="today"
-            placeholder="Start Date"
-          ></b-form-datepicker>
-        </div>
-        <div class="col-lg-5">
-          <b-form-datepicker
-            id="endDatePicker"
-            v-model="endDate"
-            :min="startDate"
-            placeholder="End Date"
-          ></b-form-datepicker>
-        </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </div>
+  </b-modal>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+  props: {},
   data: () => {
     return {
-      eventName: '',
-      eventDescription: '',
-      eventDate: '',
-      eventTime: '',
-      startDate: '',
-      endDate: '',
+      channelName: '',
+      channelAbstract: '',
     }
   },
   computed: {
-    today() {
-      return new Date()
-    },
-    eventDateTime() {
-      const date = new Date(this.eventDate)
-      const time = this.eventTime.split(':')
-      date.setHours(time[0])
-      date.setMinutes(time[1])
-      date.setSeconds(time[2])
-      return date
-    },
+    ...mapState({
+      userId: (state) => state.userId,
+    }),
   },
   methods: {
     submit() {
-      this.$router.replace('1')
+      const url = '/channels'
+      const params = {
+        name: this.channelName,
+        abstract: this.channelAbstract,
+        parent_channel_id: 1,
+        parent_comment_id: 1,
+      }
+      const config = {
+        headers: {
+          'Content-Type': 'application:json',
+        },
+      }
+
+      this.$axios
+        .post(url, params, config)
+        .then(() => {
+          alert('ok')
+        })
+        .catch(() => {
+          alert('An error occured')
+        })
+      this.clearInputForm()
     },
-    cancel() {
-      this.$router.back()
+    clearInputForm() {
+      this.channelName = ''
+      this.channelAbstract = ''
     },
   },
 }
