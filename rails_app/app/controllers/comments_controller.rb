@@ -8,6 +8,7 @@ class CommentsController < ApplicationController
   end
 
   # GET /comments/channel/:channel_id
+  # author hosoda
   def comment_list
     sql = ActiveRecord::Base.send(
       :sanitize_sql_array,
