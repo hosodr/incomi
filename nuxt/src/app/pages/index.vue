@@ -69,10 +69,7 @@
           </div>
           <div class="row list-group height-fixed scroll">
             <template v-for="channel in channels">
-              <ChannelItem
-                :key="channel.channel.channelId"
-                :channel="channel"
-              />
+              <ChannelItem :key="channel.id" :channel="channel" />
             </template>
           </div>
         </div>
@@ -117,16 +114,33 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 export default {
-  components: {},
+  async fetch() {
+    await this.getEventInfo()
+    await this.getChannels()
+  },
   data: () => {
     return {
-      events: null,
-      channels: null,
+      events: [],
+      channels: [],
     }
   },
-  created() {
-    this.events = this.$getChannelEventInfo(this.channelId)
-    this.channels = this.$getChannels()
+  methods: {
+    async getChannels() {
+      const tmp = await this.$axios
+        .get('/api/channels.json')
+        .then((res) => res.data)
+      const channels = tmp.channels
+      for (let i = 0; i < channels.length; i++) {
+        channels[i].numOfComments = channels[i].num_of_comments
+        channels[i].numOfEvents = channels[i].num_of_events
+      }
+      this.channels = channels
+    },
+    async getEventInfo() {
+      this.events = await this.$axios
+        .get('/api/events.json')
+        .then((res) => res.data.events)
+    },
   },
 }
 </script>
