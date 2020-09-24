@@ -7,6 +7,7 @@
         :show-thread="showThread"
         :get-thread="getThread"
         :repliable="repliable"
+        :set-root-message="setRootMessage"
       />
     </template>
   </ul>
@@ -20,6 +21,10 @@ export default {
       required: true,
     },
     showThread: {
+      type: Function,
+      default: () => () => {},
+    },
+    setRootMessage: {
       type: Function,
       default: () => () => {},
     },

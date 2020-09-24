@@ -2,7 +2,7 @@
   <div v-if="message !== null" class="card border-right-0 border-left-0">
     <div class="card-body py-3">
       <h6 class="card-subtitle text-muted" style="font-size: 14px">
-        <!-- {{ message.created_at }} -->
+        {{ date }} {{ time }}
       </h6>
       <div class="row">
         <div class="col pr-0 mb-1">
@@ -44,6 +44,10 @@ export default {
       type: Function,
       default: () => () => {},
     },
+    setRootMessage: {
+      type: Function,
+      default: () => () => {},
+    },
     repliable: {
       type: Boolean,
       default: true,
@@ -52,10 +56,23 @@ export default {
   data: () => {
     return {}
   },
-  mounted() {},
+  computed: {
+    date() {
+      return this.message.created_at.split('T')[0]
+    },
+    time() {
+      return this.message.created_at.split('T')[1].split('.')[0]
+    },
+  },
+  mounted() {
+    // console.log('commentid', this.message.id)
+    // console.log('channel id', this.message.channel_id)
+    // console.log('child id', this.message.child_channel_id)
+  },
   methods: {
     goThread() {
-      this.getThread(this.message.child_channel_id, this.message)
+      this.setRootMessage(this.message)
+      this.getThread(this.message.child_channel_id)
       this.showThread()
     },
   },

@@ -4,23 +4,17 @@
     :to="{ name: 'event_list-id', params: { id: event.id } }"
   >
     <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">{{ event.name }}</h5>
+      <h4 class="mb-1">{{ event.name }}</h4>
     </div>
-    <p class="mb-0" style="font-size: 14px">
+    <p class="mb-0">
       {{ event.abstract }}
     </p>
     <table>
       <tr>
-        <th>Zoom URL:</th>
-        <td class="text-break">{{ event.zoom_url }}</td>
-      </tr>
-      <tr>
-        <th>Date:</th>
-        <td class="text-break">{{ event.host_date }}</td>
-      </tr>
-      <tr>
-        <th>Registration Period:</th>
-        <td class="text-break">{{ event.from_date }}〜{{ event.to_date }}</td>
+        <th class="text-muted">Date:</th>
+        <td class="text-break text-muted">
+          {{ event.host_date | formatTime }}
+        </td>
       </tr>
     </table>
   </nuxt-link>
@@ -28,6 +22,11 @@
 
 <script>
 export default {
+  filters: {
+    formatTime(time) {
+      return time.split('.')[0].replace('T', ' ')
+    },
+  },
   props: {
     event: {
       id: 0,
