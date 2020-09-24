@@ -1,11 +1,7 @@
 <template>
   <div class="container">
-    <ThreadSideBar
-      :messages="threadComments"
-      :root-message="rootMessage"
-      :thread-id="threadId"
-    />
-    <EventSideBar :events="events" :channel-id="channelId" />
+    <ThreadSideBar :messages="threadComments" :root-message="rootMessage" />
+    <EventSideBar :events="events" />
     <b-modal
       id="create-event"
       size="lg"
@@ -146,11 +142,15 @@
             <div v-if="isThread && threadComments">
               <div class="row height-fixed scroll">
                 <div class="col">
-                  <Message v-if="rootMessage" :message="rootMessage" />
+                  <Message
+                    v-if="rootMessage"
+                    :message="rootMessage"
+                    :repliable="false"
+                  />
                   <p class="text-muted m-0 text-center">
                     {{ threadComments.length }}件の返信
                   </p>
-                  <MessageList :messages="threadComments" />
+                  <MessageList :messages="threadComments" :repliable="false" />
                 </div>
               </div>
               <div class="row">
@@ -205,21 +205,6 @@ export default {
     BIconPeople,
     BIconChatDots,
   },
-  async fetch() {
-    this.events = await this.$axios
-      .get('/api/events.json?channel_id=' + this.$route.params.id)
-      .then((res) => res.data.events)
-    this.channelComments = await this.$axios
-      .get('/api/comments/' + this.$route.params.id + '.json')
-      .then((res) => {
-        const comments = res.data
-        if (!comments.message) {
-          comments.message = ''
-          comments.childThread = { channelId: 100, numOfComments: 30 }
-        }
-        return [comments]
-      })
-  },
   data: () => {
     return {
       addMyChannel: false,
@@ -250,54 +235,18 @@ export default {
     },
   },
   created() {
-    const tmp = this.$getChannelInfo(this.channelId)
-    this.channelComments = tmp.channelComments
-    this.followingUsers = tmp.followingUsers
-    this.hostUserId = parseInt(tmp.hostUserId)
-    this.channelName = tmp.channelName
-    this.channelAbstract = tmp.channelAbstract
-    // this.events = this.$getChannelEventInfo(this.channelId)
+    this.getChannelInfo(this.channelId)
+    this.getChannelComments(this.channelId)
+    this.getEventInfo(this.channelId)
   },
   methods: {
-    // getChannelInfo(channelId) {
-    //   // チャンネルの情報を取得
-    //   const tmpComments = []
-    //   for (let i = 0; i < 10; i++) {
-    //     tmpComments.push({
-    //       commentId: i,
-    //       timestamp: new Date().toDateString(),
-    //       userId: 'hoge',
-    //       message: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805',
-    //       childThread: { channelId: 100 + i, numOfComments: 30 },
-    //     })
-    //   }
-    //   const isRoot = true
-    //   if (isRoot === true) {
-    //     this.followingUsers = ['498', '34', '342']
-    //     this.hostUserId = '320'
-    //     this.channelName = 'machine learning'
-    //     this.channelAbstract = 'channel for student studying ml'
-    //     this.channelComments = tmpComments
-    //   }
-    // },
     getThreadInfo(threadId, rootMessage) {
       // スレッドの情報を取得
-      const tmpThreads = []
-      for (let i = 0; i < 10; i++) {
-        tmpThreads.push({
-          commentId: i + 100,
-          userId: 'hoge',
-          timestamp: new Date().toDateString(),
-          message: '何しようか\nhttps://www.google.com/',
-          childThread: {},
-        })
-      }
-      const isRoot = false
-      if (isRoot === false) {
-        this.threadComments = tmpThreads
-        this.threadId = 100
-        this.rootMessage = rootMessage
-      }
+      const url = `/api/comments/channel/${threadId}.json`
+      this.$axios.get(url).then((res) => {
+        this.threadComments = res.data.comments
+      })
+      this.rootMessage = rootMessage
     },
     showThread() {
       if (this.threadComments) {
@@ -317,20 +266,37 @@ export default {
         this.errorCountDown = 5
       }
     },
-    // getChannelEventInfo(channelId) {
-    //   for (let i = 0; i < 10; i++) {
-    //     this.events.push({
-    //       eventId: i,
-    //       eventName: 'stydy for ml',
-    //       eventAbstract:
-    //         'event abstract\nevent abstract\nevent abstract\nevent abstract\n',
-    //       hostDate: new Date().toDateString(),
-    //       fromDate: new Date().toDateString(),
-    //       toDate: new Date().toDateString(),
-    //       zoomUrl: 'zoom.url',
-    //     })
-    //   }
-    // },
+    getChannelInfo(channelId) {
+      // チャンネルの詳細情報を取得する
+      const url = `/api/channels/${channelId}.json`
+      this.$axios.get(url).then((res) => {
+        const data = res.data
+        this.channelAbstract = data.channelAbstract
+        this.channelName = data.name
+      })
+    },
+    getChannelComments(channelId) {
+      // チャンネルに紐ついたコメントを取得する
+      const url = `/api/comments/channel/${channelId}.json`
+      this.$axios.get(url).then((res) => {
+        const data = res.data.comments
+        for (let i = 0; i < data.length; i++) {
+          data[i].child_channel_id = 1
+        }
+        this.channelComments = data
+        // channel_id: 1
+        // child_channel_id: null
+        // id: 1
+        // message: null
+        // num_of_comments: null
+        // user_id: 1
+      })
+    },
+    async getEventInfo(channelId) {
+      this.events = await this.$axios
+        .get('/api/events.json?channel_id=' + channelId)
+        .then((res) => res.data.events)
+    },
   },
 }
 </script>
