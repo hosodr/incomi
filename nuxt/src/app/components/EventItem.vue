@@ -1,26 +1,26 @@
 <template>
   <nuxt-link
-    class="list-group-item list-group-item-action flex-column align-items-start"
-    :to="{ name: 'event_list-id', params: { id: event.eventId } }"
+    class="list-group-item list-group-item-action flex-column align-items-start mb-1"
+    :to="{ name: 'event_list-id', params: { id: event.id } }"
   >
     <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">{{ event.eventName }}</h5>
+      <h5 class="mb-1">{{ event.name }}</h5>
     </div>
     <p class="mb-0" style="font-size: 14px">
-      {{ event.eventAbstract }}
+      {{ event.abstract }}
     </p>
     <table>
       <tr>
-        <th>zoom:</th>
-        <td>{{ event.zoomUrl }}</td>
+        <th>Zoom URL:</th>
+        <td class="text-break">{{ event.zoom_url }}</td>
       </tr>
       <tr>
-        <th>host date:</th>
-        <td>{{ event.hostDate }}</td>
+        <th>Date:</th>
+        <td class="text-break">{{ event.host_date }}</td>
       </tr>
       <tr>
-        <th>dead line:</th>
-        <td>{{ event.fromDate }}〜{{ event.toDate }}</td>
+        <th>Registration Period:</th>
+        <td class="text-break">{{ event.from_date }}〜{{ event.to_date }}</td>
       </tr>
     </table>
   </nuxt-link>
@@ -30,6 +30,7 @@
 export default {
   props: {
     event: {
+      id: 0,
       type: Object,
       required: true,
     },
@@ -37,3 +38,8 @@ export default {
   mounted() {},
 }
 </script>
+
+<style scoped>
+td {
+}
+</style>

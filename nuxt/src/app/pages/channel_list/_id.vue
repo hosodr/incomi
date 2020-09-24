@@ -1,14 +1,37 @@
 <template>
   <div class="container">
-    <ThreadSideBar
-      :messages="threadComments"
-      :root-message="rootMessage"
-      :thread-id="threadId"
-    />
+    <ThreadSideBar :messages="threadComments" :root-message="rootMessage" />
     <EventSideBar :events="events" />
-    <b-modal id="create-event" size="lg" title="Create a new event"
+    <b-modal
+      id="create-event"
+      size="lg"
+      title="Create a new event"
+      @ok="afterCreateEvent()"
       ><CreateEventModal
+        ref="createEventModal"
+        :channel-id="channelId"
+        :host-user-id="hostUserId"
     /></b-modal>
+    <div class="row mt-3">
+      <b-alert
+        :show="errorCountDown"
+        dismissible
+        variant="danger"
+        @dismissed="errorCountDown = 0"
+        @dismiss-count-down="errorCountDownChanged"
+      >
+        Error creating a new event
+      </b-alert>
+      <b-alert
+        :show="successCountDown"
+        dismissible
+        variant="success"
+        @dismissed="successCountDown = 0"
+        @dismiss-count-down="successCountDownChanged"
+      >
+        Event created
+      </b-alert>
+    </div>
     <div class="row mt-3">
       <div class="col-md-8">
         <div class="row card-header pb-0">
@@ -74,7 +97,7 @@
 
             <div class="row">
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
-                <b-icon-people />{{ followingUsers.length }} people
+                <b-icon-people />{{ followingUsers.length }} followers
               </p>
               <p class="mr-1 mb-0 text-muted" style="font-size: 8">
                 <b-icon-chat-dots />{{ channelComments.length }} comments
@@ -115,15 +138,19 @@
             </b-nav>
           </b-card-header>
 
-          <b-card-body>
-            <div v-if="isThread && threadComments">
+          <b-card-body v-if="isThread && threadComments">
+            <div>
               <div class="row height-fixed scroll">
                 <div class="col">
-                  <Message v-if="rootMessage" :message="rootMessage" />
+                  <Message
+                    v-if="rootMessage"
+                    :message="rootMessage"
+                    :repliable="false"
+                  />
                   <p class="text-muted m-0 text-center">
-                    {{ threadComments.length }}件の返信
+                    {{ threadComments.length }} replies
                   </p>
-                  <MessageList :messages="threadComments" />
+                  <MessageList :messages="threadComments" :repliable="false" />
                 </div>
               </div>
               <div class="row">
@@ -132,25 +159,15 @@
                 </div>
               </div>
             </div>
-
-            <div v-else>
-              <div class="row">
-                <b-input-group size="sm" class="mb-2">
-                  <b-form-input
-                    type="search"
-                    placeholder="Search event"
-                  ></b-form-input>
-                  <b-input-group-prepend is-text>
-                    <b-icon-search />
-                  </b-input-group-prepend>
-                </b-input-group>
-              </div>
-              <div class="row justify-content-center height-fixed scroll">
-                <template v-for="event in events">
-                  <EventItem :key="event.id" :event="event" />
-                </template>
+            <div class="row">
+              <div class="col">
+                <SubmitBar :channel-id="channelId" />
               </div>
             </div>
+          </b-card-body>
+
+          <b-card-body v-else class="px-1">
+            <EventList :events="events" :channel-id="channelId" />
           </b-card-body>
         </b-card>
       </div>
@@ -160,7 +177,6 @@
 
 <script>
 import {
-  BIconSearch,
   BIconCalendar2Event,
   BIconChatRightText,
   BIconPeople,
@@ -168,7 +184,6 @@ import {
 } from 'bootstrap-vue'
 export default {
   components: {
-    BIconSearch,
     BIconCalendar2Event,
     BIconChatRightText,
     BIconPeople,
@@ -178,15 +193,24 @@ export default {
     return {
       addMyChannel: false,
       isThread: false,
-      rootMessage: null,
+      rootMessage: {
+        commentId: 99,
+        userId: 'hoge',
+        timestamp: new Date().toDateString(),
+        message: '何しようか\nhttps://www.google.com/',
+        childThread: { channelId: 99, numOfComments: 30 },
+      },
       followingUsers: [],
-      hostUserId: '',
+      hostUserId: 0,
       channelName: '',
       channelAbstract: '',
       channelComments: [],
-      threadComments: null,
+      threadComments: [],
       threadId: null,
       events: [],
+      newEventCreated: 0,
+      errorCountDown: 0,
+      successCountDown: 0,
     }
   },
   computed: {
@@ -195,74 +219,67 @@ export default {
     },
   },
   created() {
-    const tmp = this.$getChannelInfo(this.channelId)
-    this.channelComments = tmp.channelComments
-    this.followingUsers = tmp.followingUsers
-    this.hostUserId = tmp.hostUserId
-    this.channelName = tmp.channelName
-    this.channelAbstract = tmp.channelAbstract
-    this.events = this.$getChannelEventInfo(this.channelId)
+    this.getChannelInfo(this.channelId)
+    this.getChannelComments(this.channelId)
+    this.getEventInfo(this.channelId)
   },
   methods: {
-    // getChannelInfo(channelId) {
-    //   // チャンネルの情報を取得
-    //   const tmpComments = []
-    //   for (let i = 0; i < 10; i++) {
-    //     tmpComments.push({
-    //       commentId: i,
-    //       timestamp: new Date().toDateString(),
-    //       userId: 'hoge',
-    //       message: 'こんなんあるよhttps://arxiv.org/pdf/1810.04805',
-    //       childThread: { channelId: 100 + i, numOfComments: 30 },
-    //     })
-    //   }
-    //   const isRoot = true
-    //   if (isRoot === true) {
-    //     this.followingUsers = ['498', '34', '342']
-    //     this.hostUserId = '320'
-    //     this.channelName = 'machine learning'
-    //     this.channelAbstract = 'channel for student studying ml'
-    //     this.channelComments = tmpComments
-    //   }
-    // },
     getThreadInfo(threadId, rootMessage) {
       // スレッドの情報を取得
-      const tmpThreads = []
-      for (let i = 0; i < 10; i++) {
-        tmpThreads.push({
-          commentId: i + 100,
-          userId: 'hoge',
-          timestamp: new Date().toDateString(),
-          message: '何しようか\nhttps://www.google.com/',
-          childThread: {},
-        })
-      }
-      const isRoot = false
-      if (isRoot === false) {
-        this.threadComments = tmpThreads
-        this.threadId = 100
-        this.rootMessage = rootMessage
-      }
+      const url = `/api/comments/channel/${threadId}.json`
+      this.$axios.get(url).then((res) => {
+        this.threadComments = res.data.comments
+        console.log('thread', this.threadComments)
+      })
+      this.rootMessage = rootMessage
     },
     showThread() {
       if (this.threadComments) {
         this.isThread = true
       }
     },
-    // getChannelEventInfo(channelId) {
-    //   for (let i = 0; i < 10; i++) {
-    //     this.events.push({
-    //       eventId: i,
-    //       eventName: 'stydy for ml',
-    //       eventAbstract:
-    //         'event abstract\nevent abstract\nevent abstract\nevent abstract\n',
-    //       hostDate: new Date().toDateString(),
-    //       fromDate: new Date().toDateString(),
-    //       toDate: new Date().toDateString(),
-    //       zoomUrl: 'zoom.url',
-    //     })
-    //   }
-    // },
+    errorCountDownChanged(errorCountDown) {
+      this.errorCountDown = errorCountDown
+    },
+    successCountDownChanged(successCountDown) {
+      this.successCountDown = successCountDown
+    },
+    async afterCreateEvent() {
+      if (await this.$refs.createEventModal.submit()) {
+        this.successCountDown = 5
+      } else {
+        this.errorCountDown = 5
+      }
+      await this.getEventInfo(this.channelId)
+    },
+    getChannelInfo(channelId) {
+      // チャンネルの詳細情報を取得する
+      const url = `/api/channels/${channelId}.json`
+      this.$axios.get(url).then((res) => {
+        const data = res.data
+        this.channelAbstract = data.channelAbstract
+        this.channelName = data.name
+      })
+    },
+    getChannelComments(channelId) {
+      // チャンネルに紐ついたコメントを取得する
+      const url = `/api/comments/channel/${channelId}.json`
+      this.$axios.get(url).then((res) => {
+        const data = res.data.comments
+        this.channelComments = data
+        // channel_id: 1
+        // child_channel_id: null
+        // id: 1
+        // message: null
+        // num_of_comments: null
+        // user_id: 1
+      })
+    },
+    async getEventInfo(channelId) {
+      this.events = await this.$axios
+        .get('/api/events.json?channel_id=' + channelId)
+        .then((res) => res.data.events)
+    },
   },
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
   <nuxt-link
     class="list-group-item list-group-item-action flex-column align-items-start"
-    :to="{ name: 'channel_list-id', params: { id: channel.channel.channelId } }"
+    :to="{ name: 'channel_list-id', params: { id: channel.id } }"
   >
     <div class="row">
       <div class="col-10">
-        <h5 class="mb-1">{{ channel.channel.channelName }}</h5>
+        <h5 class="mb-1">{{ channel.name }}</h5>
         <p class="mb-1">
-          {{ channel.channel.channelAbstract }}
+          {{ channel.abstract }}
         </p>
       </div>
       <div class="col-2 px-0">

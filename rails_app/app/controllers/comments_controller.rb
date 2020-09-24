@@ -7,6 +7,31 @@ class CommentsController < ApplicationController
     @comments = Comment.all
   end
 
+  # GET /comments/channel/:channel_id
+  # author hosoda
+  def comment_list
+    sql = ActiveRecord::Base.send(
+      :sanitize_sql_array,
+      [
+        """
+        select comments.id, comments.user_id, comments.channel_id, comments.message, comments.created_at,comments.updated_at, child.id child_channel_id ,child.num_of_comments
+        from comments left join (     
+          select channels.id, channels.parent_comment_id, count(comments.id) num_of_comments     
+          from channels left join comments on channels.id=comments.channel_id     
+          where channels.parent_channel_id is not null     
+          group by channels.id ) child on comments.id=child.parent_comment_id 
+        where comments.channel_id=?
+        """, params[:channel_id]]
+    )
+    res = ActiveRecord::Base.connection.select_all(sql)
+    logger.debug(res.to_a)
+    @result = Hash.new
+    @result['comments'] = res.to_a
+    respond_to do |format|
+      format.json {render json: @result, status: :ok}
+    end
+  end
+
   # GET /comments/1
   # GET /comments/1.json
   def show
@@ -28,10 +53,8 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to @comment, notice: 'Comment was successfully created.' }
         format.json { render :show, status: :created, location: @comment }
       else
-        format.html { render :new }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end

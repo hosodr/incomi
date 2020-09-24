@@ -1,12 +1,12 @@
 <template>
-  <ul v-if="messages" ref="messages" class="list-group">
+  <ul v-if="messages !== null" ref="messages" class="list-group">
     <template v-for="(message, key) in messages">
       <Message
         :key="key"
         :message="message"
         :show-thread="showThread"
         :get-thread="getThread"
-        :thread-id="message.childThread.channelId"
+        :repliable="repliable"
       />
     </template>
   </ul>
@@ -27,7 +27,10 @@ export default {
       type: Function,
       default: () => () => {},
     },
-    threadId: { type: Number, default: null },
+    repliable: {
+      type: Boolean,
+      default: true,
+    },
   },
   mounted() {
     this.$nextTick(() => {

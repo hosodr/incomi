@@ -1,5 +1,5 @@
 class ChannelsController < ApplicationController
-  before_action :set_channel, only: [:show, :edit, :update, :destroy]
+  before_action :set_channel, only: [:edit, :update, :destroy]
 
   # GET /channels
   # GET /channels.json
@@ -30,7 +30,16 @@ class ChannelsController < ApplicationController
 
   # GET /channels/1
   # GET /channels/1.json
+  # author Hosoda
   def show
+    respond_to do |format|
+      begin
+        @channel = Channel.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        format.json { render json: :not_found, status: :not_found }
+      end
+      format.json {render :info, status: :ok, location: @channel}
+    end
   end
 
   # GET /channels/new
@@ -45,13 +54,15 @@ class ChannelsController < ApplicationController
   # POST /channels
   # POST /channels.json
   # author yusuke otsuki
+  # fixed by hosoda
   def create
     @channel = Channel.new(channel_params)
-
-    if @channel.save
-      render status: 201, json: { status: 201 }
-    else 
-      render status: 400, json: { status: 400 }
+    respond_to do |format|
+      if @channel.save
+        format.json { render :show, status: :created, location: @channel}
+      else
+        format.json { render json: @channel.errors, status: :unprocessable_entity}
+      end
     end
   end
 
