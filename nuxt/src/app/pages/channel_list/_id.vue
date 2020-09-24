@@ -18,24 +18,22 @@
     /></b-modal>
     <div class="row mt-3">
       <b-alert
-        v-if="newEventCreated === 2"
-        :show="dismissCountDown"
+        :show="errorCountDown"
         dismissible
         variant="danger"
-        @dismissed="dismissCountDown = 0"
-        @dismiss-count-down="countDownChanged"
+        @dismissed="errorCountDown = 0"
+        @dismiss-count-down="errorCountDownChanged"
       >
         Error creating a new event
       </b-alert>
       <b-alert
-        v-if="newEventCreated === 1"
-        :show="dismissCountDown"
+        :show="successCountDown"
         dismissible
         variant="success"
-        @dismissed="dismissCountDown = 0"
-        @dismiss-count-down="countDownChanged"
+        @dismissed="successCountDown = 0"
+        @dismiss-count-down="successCountDownChanged"
       >
-        Error creating a new event
+        Event created
       </b-alert>
     </div>
     <div class="row mt-3">
@@ -242,7 +240,8 @@ export default {
       threadId: null,
       events: [],
       newEventCreated: 0,
-      dismissCountDown: 0,
+      errorCountDown: 0,
+      successCountDown: 0,
     }
   },
   computed: {
@@ -305,17 +304,17 @@ export default {
         this.isThread = true
       }
     },
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
-      this.newEventCreated = 0
+    errorCountDownChanged(errorCountDown) {
+      this.errorCountDown = errorCountDown
+    },
+    successCountDownChanged(successCountDown) {
+      this.successCountDown = successCountDown
     },
     afterCreateEvent() {
       if (this.$refs.createEventModal.submit()) {
-        this.newEventCreated = 1
-        this.dismissCountDown = 5
+        this.successCountDown = 5
       } else {
-        this.newEventCreated = 2
-        this.dismissCountDown = 5
+        this.errorCountDown = 5
       }
     },
     // getChannelEventInfo(channelId) {
