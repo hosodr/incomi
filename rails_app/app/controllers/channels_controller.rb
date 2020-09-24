@@ -54,13 +54,15 @@ class ChannelsController < ApplicationController
   # POST /channels
   # POST /channels.json
   # author yusuke otsuki
+  # fixed by hosoda
   def create
     @channel = Channel.new(channel_params)
-
-    if @channel.save
-      render status: 201, json: { status: 201 }
-    else 
-      render status: 400, json: { status: 400 }
+    respond_to do |format|
+      if @channel.save
+        format.json { render :show, status: :created, location: @channel}
+      else
+        format.json { render json: @channel.errors, status: :unprocessable_entity}
+      end
     end
   end
 
