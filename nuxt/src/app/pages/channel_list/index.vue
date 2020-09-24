@@ -64,5 +64,20 @@ export default {
       channels: [],
     }
   },
+  created() {
+    this.getChannels()
+  },
+  methods: {
+    getChannels() {
+      this.$axios.get('/api/channels.json').then((res) => {
+        const channels = res.data.channels
+        for (let i = 0; i < channels.length; i++) {
+          channels[i].numOfComments = channels[i].num_of_comments
+          channels[i].numOfEvents = channels[i].num_of_events
+        }
+        this.channels = channels
+      })
+    },
+  },
 }
 </script>
