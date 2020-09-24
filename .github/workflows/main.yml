@@ -128,15 +128,15 @@ jobs:
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       
       - name: Clear previously seeded data from the database 
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: 22
-        script: |
-          whoami
-          mysql -uroot -proot_pass -h ${{ secrets.DATABASE_IP }} -e "DROP DATABASE IF EXISTS rails_app_production;"
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script: |
+            whoami
+            mysql -uroot -proot_pass -h ${{ secrets.DATABASE_IP }} -e "DROP DATABASE IF EXISTS rails_app_production;"
 
       - name: Apply the resource files to our cluster
         run: |
