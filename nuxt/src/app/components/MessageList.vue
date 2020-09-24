@@ -6,7 +6,7 @@
         :message="message"
         :show-thread="showThread"
         :get-thread="getThread"
-        :thread-id="message.childThread.channelId"
+        :repliable="repliable"
       />
     </template>
   </ul>
@@ -27,7 +27,10 @@ export default {
       type: Function,
       default: () => () => {},
     },
-    threadId: { type: Number, default: null },
+    repliable: {
+      type: Boolean,
+      default: true,
+    },
   },
   mounted() {
     this.$nextTick(() => {
