@@ -7,11 +7,13 @@
           type="search"
           placeholder="Search event"
         ></b-form-input>
-        <b-input-group-prepend is-text>
-          <b-button @click="searchEvent()">
-            <b-icon-search />
-          </b-button>
-        </b-input-group-prepend>
+        <button
+          type="button"
+          class="btn btn-sm btn-secondary"
+          @click="searchEvent()"
+        >
+          <b-icon-search />
+        </button>
       </b-input-group>
     </div>
     <div class="row justify-content-center height-fixed scroll">
@@ -42,17 +44,17 @@ export default {
   data() {
     return {
       keyword: '',
-      eventSearchResult: [],
+      // eventSearchResult: [],
     }
   },
   computed: {
-    eventsToShow() {
-      return this.keyword === '' ? this.event : this.eventSearchResult
-    },
+    // eventsToShow() {
+    //   return this.keyword === '' ? this.event : this.eventSearchResult
+    // },
   },
   methods: {
     async searchEvent() {
-      this.eventSearchResult = await this.$axios
+      this.events = await this.$axios
         .get('/api/events.json', {
           params: {
             channel_id: this.channelId,

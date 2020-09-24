@@ -133,46 +133,25 @@
             </b-nav>
           </b-card-header>
 
-          <b-card-body>
-            <div v-if="isThread && threadComments">
-              <div class="row height-fixed scroll">
-                <div class="col">
-                  <Message v-if="rootMessage" :message="rootMessage" />
-                  <p class="text-muted m-0 text-center">
-                    {{ threadComments.length }}件の返信
-                  </p>
-                  <MessageList :messages="threadComments" />
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <SubmitBar :channel-id="channelId" />
-                </div>
+          <b-card-body v-if="isThread && threadComments" class="px-1">
+            <div class="row height-fixed scroll">
+              <div class="col">
+                <Message v-if="rootMessage" :message="rootMessage" />
+                <p class="text-muted m-0 text-center">
+                  {{ threadComments.length }}件の返信
+                </p>
+                <MessageList :messages="threadComments" />
               </div>
             </div>
+            <div class="row">
+              <div class="col">
+                <SubmitBar :channel-id="channelId" />
+              </div>
+            </div>
+          </b-card-body>
 
-            <div v-else>
-              <div class="row">
-                <b-input-group size="sm" class="mb-2">
-                  <b-form-input
-                    type="search"
-                    placeholder="Search event"
-                  ></b-form-input>
-                  <b-input-group-prepend is-text>
-                    <b-icon-search />
-                  </b-input-group-prepend>
-                </b-input-group>
-              </div>
-              <div class="row justify-content-center height-fixed scroll">
-                <template v-for="event in events">
-                  <EventItem
-                    :key="event.id"
-                    :event="event"
-                    :channel-id="channelId"
-                  />
-                </template>
-              </div>
-            </div>
+          <b-card-body v-else class="px-1">
+            <EventList :events="events" :channel-id="channelId" />
           </b-card-body>
         </b-card>
       </div>
@@ -182,7 +161,6 @@
 
 <script>
 import {
-  BIconSearch,
   BIconCalendar2Event,
   BIconChatRightText,
   BIconPeople,
@@ -190,7 +168,6 @@ import {
 } from 'bootstrap-vue'
 export default {
   components: {
-    BIconSearch,
     BIconCalendar2Event,
     BIconChatRightText,
     BIconPeople,
