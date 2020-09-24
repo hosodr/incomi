@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     submit() {
-      const url = '/channels'
+      const url = '/api/channels.json'
       const params = {
         name: this.channelName,
         abstract: this.channelAbstract,
