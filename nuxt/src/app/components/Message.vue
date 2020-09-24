@@ -64,11 +64,15 @@ export default {
       return this.message.created_at.split('T')[1].split('.')[0]
     },
   },
-  mounted() {},
+  mounted() {
+    // console.log('commentid', this.message.id)
+    // console.log('channel id', this.message.channel_id)
+    // console.log('child id', this.message.child_channel_id)
+  },
   methods: {
     goThread() {
-      this.getThread(this.message.child_channel_id)
       this.setRootMessage(this.message)
+      this.getThread(this.message.child_channel_id)
       this.showThread()
     },
   },

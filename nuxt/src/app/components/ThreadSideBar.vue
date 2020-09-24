@@ -1,19 +1,14 @@
 <template>
   <b-sidebar v-if="messages" id="thread-sidebar-backdrop" title="Thread" right>
-    <Message
-      :message="rootMessage"
-      :repliable="false"
-      :set-root-message="setRootMessage"
-    />
+    <Message :message="rootMessage" :repliable="false" />
     <p class="text-muted m-0 text-center">{{ messages.length }} replies</p>
-    <MessageList
-      :messages="messages"
-      :repliable="false"
-      :set-root-message="setRootMessage"
-    />
+    <MessageList :messages="messages" :repliable="false" />
     <SubmitBar
-      :channel-id="rootMessage.child_channel_id"
-      :reload-comments="reloadComments"
+      :channel-id="threadId"
+      :parent-channel-id="parentChannelId"
+      :parent-comment-id="parentCommentId"
+      :get-thread-comments="getThreadComments"
+      :get-channel-comments="getChannelComments"
     />
   </b-sidebar>
 </template>
@@ -29,17 +24,29 @@ export default {
       type: Number,
       default: null,
     },
+    parentChannelId: {
+      type: Number,
+      default: null,
+    },
+    parentCommentId: {
+      type: Number,
+      default: null,
+    },
     rootMessage: {
       type: Object,
       default: () => {},
     },
-    reloadComments: {
+    getChannelComments: {
+      type: Function,
+      required: true,
+    },
+    getThreadComments: {
       type: Function,
       required: true,
     },
     setRootMessage: {
       type: Function,
-      required: true,
+      default: () => () => {},
     },
   },
   data() {

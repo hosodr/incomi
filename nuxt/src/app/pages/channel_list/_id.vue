@@ -3,8 +3,11 @@
     <ThreadSideBar
       :messages="threadComments"
       :root-message="rootMessage"
-      :reload-comments="getChannelComments"
-      :set-root-message="setRootMessage"
+      :thread-id="threadId"
+      :parent-channel-id="channelId"
+      :parent-comment-id="parentCommentId"
+      :get-thread-comments="getThreadComments"
+      :get-channel-comments="getChannelComments"
     />
     <EventSideBar :events="events" :channel-id="channelId" />
     <b-modal
@@ -12,12 +15,9 @@
       size="lg"
       title="Create a new event"
       @ok="afterCreateEvent()"
-      ><CreateEventModal
-        ref="createEventModal"
-        :channel-id="channelId"
-        :host-user-id="hostUserId"
+      ><CreateEventModal ref="createEventModal" :channel-id="channelId"
     /></b-modal>
-    <div class="row mt-3">
+    <!-- <div class="row mt-3">
       <b-alert
         :show="errorCountDown"
         dismissible
@@ -36,7 +36,7 @@
       >
         Event created
       </b-alert>
-    </div>
+    </div> -->
     <div class="row mt-3">
       <div class="col-md-8">
         <div class="row card-header pb-0">
@@ -128,7 +128,7 @@
           <div class="col">
             <SubmitBar
               :channel-id="channelId"
-              :reload-comments="getChannelComments"
+              :get-channel-comments="getChannelComments"
             />
           </div>
         </div>
@@ -147,8 +147,8 @@
             </b-nav>
           </b-card-header>
 
-          <b-card-body v-if="isThread && threadComments">
-            <div>
+          <b-card-body v-if="isThread" class="pb-0">
+            <div v-if="threadComments !== null">
               <div class="row height-fixed scroll">
                 <div class="col">
                   <Message
@@ -165,17 +165,18 @@
               <div class="row">
                 <div class="col">
                   <SubmitBar
-                    :channel-id="rootMessage.channel_id"
-                    :parent-channel-id="rootMessage.parent_channel_id"
-                    :parent-comment-id="rootMessage.parent_comment_id"
-                    :reload-comments="getThreadComments"
+                    :channel-id="threadId"
+                    :parent-channel-id="channelId"
+                    :parent-comment-id="parentCommentId"
+                    :get-thread-comments="getThreadComments"
+                    :get-channel-comments="getChannelComments"
                   />
                 </div>
               </div>
             </div>
           </b-card-body>
 
-          <b-card-body v-else class="px-1">
+          <b-card-body v-else class="px-1 pb-0">
             <EventList :events="events" :channel-id="channelId" />
           </b-card-body>
         </b-card>
@@ -204,16 +205,16 @@ export default {
       isThread: false,
       rootMessage: {},
       followingUsers: [],
-      hostUserId: 0,
       channelName: '',
       channelAbstract: '',
       channelComments: [],
-      threadComments: [],
+      threadComments: null,
       threadId: null,
       events: [],
       newEventCreated: 0,
       errorCountDown: 0,
       successCountDown: 0,
+      parentCommentId: null,
     }
   },
   computed: {
@@ -245,11 +246,11 @@ export default {
     setRootMessage(rootMessage) {
       // スレッドのルートコメントをセット
       this.rootMessage = rootMessage
+      this.threadId = rootMessage.child_channel_id
+      this.parentCommentId = rootMessage.id
     },
     showThread() {
-      if (this.threadComments) {
-        this.isThread = true
-      }
+      this.isThread = true
     },
     errorCountDownChanged(errorCountDown) {
       this.errorCountDown = errorCountDown

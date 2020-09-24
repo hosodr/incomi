@@ -73,15 +73,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   props: {
     channelId: {
-      id: 0,
-      type: Number,
-      required: true,
-    },
-    hostUserId: {
-      id: 0,
       type: Number,
       required: true,
     },
@@ -97,36 +92,66 @@ export default {
       created: false,
     }
   },
+
   computed: {
+    ...mapState({
+      userId: (state) => state.userId,
+    }),
     today() {
       return new Date()
     },
     eventDateTime() {
-      const date = new Date(this.eventDate)
+      let date = new Date(this.eventDate)
       const time = this.eventTime.split(':')
       date.setHours(time[0])
       date.setMinutes(time[1])
       date.setSeconds(time[2])
+      date = date.toISOString()
+      date = date.split('.')[0].replace('T', ' ')
       return date
     },
   },
   methods: {
-    async submit() {
-      try {
-        await this.$axios.post('/api/events.json', {
-          name: this.eventName,
-          abstract: this.eventDescription,
-          channel_id: this.channelId,
-          host_user_id: this.hostUserId,
-          host_date: this.eventDateTime,
-          from_date: this.startDate,
-          to_date: this.endDate,
-        })
-        this.created = true
-      } catch {
-        this.created = false
+    submit() {
+      const url = '/api/events.json'
+      const params = {
+        name: this.eventName,
+        abstract: this.eventDescription,
+        channel_id: this.channelId,
+        host_user_id: this.userId,
+        host_date: this.eventDateTime,
+        from_date: this.startDate,
+        to_date: this.endDate,
       }
-      return this.created
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+      this.$axios
+        .post(url, params, config)
+        .then(() => {
+          alert('created')
+        })
+        .catch(() => {
+          alert('An error occured')
+        })
+
+      // try {
+      //   await this.$axios.post('/api/events.json', {
+      //     name: this.eventName,
+      //     abstract: this.eventDescription,
+      //     channel_id: this.channelId,
+      //     host_user_id: this.hostUserId,
+      //     host_date: this.eventDateTime,
+      //     from_date: this.startDate,
+      //     to_date: this.endDate,
+      //   })
+      //   this.created = true
+      // } catch {
+      //   this.created = false
+      // }
+      // return this.created
     },
   },
 }
