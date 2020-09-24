@@ -1,7 +1,7 @@
 <template>
   <b-sidebar v-if="messages" id="thread-sidebar-backdrop" title="Thread" right>
     <Message :message="rootMessage" :repliable="false" />
-    <p class="text-muted m-0 text-center">3件の返信</p>
+    <p class="text-muted m-0 text-center">{{ messages.length }} replies</p>
     <MessageList :messages="messages" :repliable="false" />
     <SubmitBar :channel-id="rootMessage.child_channel_id" />
   </b-sidebar>
