@@ -46,7 +46,7 @@ export default {
     },
     setRootMessage: {
       type: Function,
-      default: () => () => {},
+      required: true,
     },
     repliable: {
       type: Boolean,
