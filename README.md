@@ -46,8 +46,8 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
   - channel_idにひもづいたcomment一覧の取得
     - GET: /comments/channel/:channel_id
       - {"comments":[
-          {"id":1,"user_id":1,"channel_id":1,"message":"hoge","child_channel_id":3,"num_of_comments":5},
-          {"id":19,"user_id":1,"channel_id":1,"message":"hoge hoge","child_channel_id":null,"num_of_comments":null},
+          {"id":1,"user_id":1,"channel_id":1,"message":"hoge","created_at":"2020-09-23T01:45:24.000Z","updated_at":"2020-09-23T01:45:24.000Z","child_channel_id":3,"num_of_comments":5},
+          {"id":19,"user_id":1,"channel_id":1,"message":"hoge hoge","created_at":"2020-09-23T01:45:24.000Z","updated_at":"2020-09-23T01:45:24.000Z","child_channel_id":null,"num_of_comments":null},
           ,...,{}
         ]}
   - comment投稿
