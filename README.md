@@ -37,7 +37,17 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
   - root channelの一覧取得
     - GET: /channels 
       - {"channels":[{"id":1, "name":"channel name", "abstract":"chanel abstract", "num_of_comments":1, "num_of_events":1},...,{}]} 
+  - channelの詳細情報
+    - GET: /channels/:id
+      - {"id":1,"parent_channel_id":null,"parent_comment_id":null,"name":"hoge","abstract":"hoge","created_at":"2020-09-23T01:45:24.000Z","updated_at":"2020-09-23T01:45:24.000Z","is_root":true}
 - comments
+  - channel_idにひもづいたcomment一覧の取得
+    - GET: /comments/channel/:channel_id
+      - {"comments":[
+          {"id":1,"user_id":1,"channel_id":1,"message":"hoge","child_channel_id":3,"num_of_comments":5},
+          {"id":19,"user_id":1,"channel_id":1,"message":"hoge hoge","child_channel_id":null,"num_of_comments":null},
+          ,...,{}
+        ]}
   - comment投稿
     - POST: /comments -H Contet-Type: application/json -d {"user_id":1, "channel_id":1, "message": "hogehoge"}
       - {"id":13,"user_id":1,"channel_id":1,"message":"hogehoge","created_at":"2020-09-23T09:01:45.000Z","updated_at":"2020-09-23T09:01:45.000Z","url":"http://localhost:3000/comments/13.json"}
