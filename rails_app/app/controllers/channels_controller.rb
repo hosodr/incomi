@@ -30,6 +30,7 @@ class ChannelsController < ApplicationController
 
   # GET /channels/1
   # GET /channels/1.json
+  # Author Yusuke Otsuki
   def show
     channelId = params[:id]
 
