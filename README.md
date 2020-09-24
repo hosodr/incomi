@@ -80,4 +80,6 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
         - {status code: 200}
       - 作成失敗時
         - {status code: 400}
+  - event 参加取り消し
+    - DELETE: /events/:id/cancel/:user_id
         
