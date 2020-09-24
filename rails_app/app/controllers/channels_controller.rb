@@ -30,7 +30,11 @@ class ChannelsController < ApplicationController
 
   # GET /channels/1
   # GET /channels/1.json
+  # author Hosoda
   def show
+    respond_to do |format|
+      format.json {render :info, status: :ok, location: @channel}
+    end
   end
 
   # GET /channels/new
