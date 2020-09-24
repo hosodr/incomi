@@ -49,5 +49,4 @@ event4 = Event.create!(channel_id:6,host_user_id:3 ,name:"Let's study Java!", ab
 
 participation1 = Participation.create!(user_id:1,event_id:1)
 participation2 = Participation.create!(user_id:4,event_id:1)
-# participation3 = Participation.create!(user_id:3,event_id:3)
 
