@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  #devise_for :users
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+    registrations: 'auth/registrations'
+  }
   post 'events/:id/participate/:user_id', to: 'events#participate'
   delete 'events/:id/cancel/:user_id', to: 'events#cancel'
   get 'comments/channel/:channel_id', to: 'comments#comment_list'

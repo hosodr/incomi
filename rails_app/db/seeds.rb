@@ -5,10 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-user1 = User.create!( name:'Yamada', email:'yamada@mail.com', password_digest:'yamayama')
-user2 = User.create!( name:'John', email:'john@mail.com', password_digest:'jjj')
-user3 = User.create!( name:'Sato', email:'sato@mail.com', password_digest:'satosato')
-user4 = User.create!( name:'Matsumoto', email:'matsumoto@mail.com', password_digest:'aaa')
+user1 = User.create!( name:'Yamada', email:'yamada@mail.com', password:'aiueo12345')
+user2 = User.create!( name:'John', email:'john@mail.com', password:'aiueo6789')
+user3 = User.create!( name:'Sato', email:'sato@mail.com', password:'satodesuyo')
+user4 = User.create!( name:'Matsumoto', email:'matsumoto@mail.com', password:'futon-masao')
 
 channel1 = Channel.create!(name:"Machine Learning", abstract:'for beginner')
 channel2 = Channel.create!(name:"Statistics", abstract:'for beginner')
