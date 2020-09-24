@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :events
   post 'events/:id/participate/:user_id', to: 'events#participate'
-  
+  delete 'events/:id/cancel/:user_id', to: 'events#cancel'
+  resources :events
   resources :comments
   resources :channels
   resources :users

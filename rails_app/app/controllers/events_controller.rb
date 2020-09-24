@@ -5,26 +5,33 @@ require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
-  # GET /events?channel_id={id}
+  # GET /events?channel_id={id}&word={}
   # GET /events.json
+  #author naya
   def index
+    events = Hash.new
     if params[:channel_id] == nil
-      events = Event.all
+      res = Event.all.order(:host_date)
     else
-      events = Event.where(channel_id: params[:channel_id])
+      res = Event.where(channel_id: params[:channel_id])
     end
+    search_word = params[:word]
+    res = res.where('name LIKE ?', "%#{search_word}%").order(:host_date)
+    events["events"] = res.to_a
     render json: events
   end
 
   #イベント詳細を表示するAPI(getEventInfo(eventID))
   # GET /events/1
   # GET /events/1.json
+  #author naya
   def show
     render json: @event
   end
 
   #ログイン中のユーザーがイベントに参加するAPI
   #POST events/:id/participate/:user_id
+  #author naya
   def participate
     #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
     #user = current_user
@@ -35,6 +42,19 @@ class EventsController < ApplicationController
       render status: :ok, json: { status: :ok }
     else
       render status: :bad_request, json: { status: :bad_request }
+    end
+  end
+
+  #イベント参加をキャンセルするAPI
+  #delete events/:id/cancel/:user_id
+  #author naya
+  def cancel
+    participant = Participation.find_by(user_id: params[:user_id], event_id: params[:id])
+    if participant != nil
+      participant.destroy
+      render status: :ok, json: { status: :ok }
+    else
+      render status: :no_content, json: { status: :no_content }
     end
   end
 
