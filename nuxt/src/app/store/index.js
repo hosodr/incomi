@@ -4,7 +4,7 @@ const store = () =>
   new Vuex.Store({
     state: {
       username: 'hoge',
-      userId: 'hoge',
+      userId: '1',
     },
     getters: {
       isSignin(state) {

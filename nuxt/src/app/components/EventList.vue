@@ -8,9 +8,13 @@
           placeholder="Search event"
         ></b-form-input>
         <b-input-group-prepend is-text>
-          <b-button @click="searchEvent()">
+          <button
+            type="button"
+            class="btn btn-sm btn-secondary"
+            @click="searchEvent"
+          >
             <b-icon-search />
-          </b-button>
+          </button>
         </b-input-group-prepend>
       </b-input-group>
     </div>
