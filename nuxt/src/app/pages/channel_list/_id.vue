@@ -5,7 +5,7 @@
       :root-message="rootMessage"
       :thread-id="threadId"
     />
-    <EventSideBar :events="events" />
+    <EventSideBar :events="events" :channel-id="channelId" />
     <b-modal
       id="create-event"
       size="lg"
@@ -18,9 +18,20 @@
     /></b-modal>
     <div class="row mt-3">
       <b-alert
+        v-if="newEventCreated === 2"
         :show="dismissCountDown"
         dismissible
         variant="danger"
+        @dismissed="dismissCountDown = 0"
+        @dismiss-count-down="countDownChanged"
+      >
+        Error creating a new event
+      </b-alert>
+      <b-alert
+        v-if="newEventCreated === 1"
+        :show="dismissCountDown"
+        dismissible
+        variant="success"
         @dismissed="dismissCountDown = 0"
         @dismiss-count-down="countDownChanged"
       >
@@ -202,15 +213,28 @@ export default {
       .then((res) => res.data.events)
     this.channelComments = await this.$axios
       .get('/api/comments/' + this.$route.params.id + '.json')
-      .then((res) => [res.data])
+      .then((res) => {
+        const comments = res.data
+        if (!comments.message) {
+          comments.message = ''
+          comments.childThread = { channelId: 100, numOfComments: 30 }
+        }
+        return [comments]
+      })
   },
   data: () => {
     return {
       addMyChannel: false,
       isThread: false,
-      rootMessage: null,
+      rootMessage: {
+        commentId: 99,
+        userId: 'hoge',
+        timestamp: new Date().toDateString(),
+        message: '何しようか\nhttps://www.google.com/',
+        childThread: { channelId: 99, numOfComments: 30 },
+      },
       followingUsers: [],
-      hostUserId: '',
+      hostUserId: 0,
       channelName: '',
       channelAbstract: '',
       channelComments: [],
@@ -230,7 +254,7 @@ export default {
     const tmp = this.$getChannelInfo(this.channelId)
     this.channelComments = tmp.channelComments
     this.followingUsers = tmp.followingUsers
-    this.hostUserId = tmp.hostUserId
+    this.hostUserId = parseInt(tmp.hostUserId)
     this.channelName = tmp.channelName
     this.channelAbstract = tmp.channelAbstract
     // this.events = this.$getChannelEventInfo(this.channelId)
