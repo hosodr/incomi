@@ -138,8 +138,8 @@
             </b-nav>
           </b-card-header>
 
-          <b-card-body>
-            <div v-if="isThread && threadComments">
+          <b-card-body v-if="isThread && threadComments">
+            <div>
               <div class="row height-fixed scroll">
                 <div class="col">
                   <Message
@@ -243,12 +243,13 @@ export default {
     successCountDownChanged(successCountDown) {
       this.successCountDown = successCountDown
     },
-    afterCreateEvent() {
+    async afterCreateEvent() {
       if (this.$refs.createEventModal.submit()) {
         this.successCountDown = 5
       } else {
         this.errorCountDown = 5
       }
+      await this.getEventInfo(this.channelId)
     },
     getChannelInfo(channelId) {
       // チャンネルの詳細情報を取得する
