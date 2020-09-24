@@ -245,7 +245,7 @@ export default {
       this.successCountDown = successCountDown
     },
     async afterCreateEvent() {
-      if (this.$refs.createEventModal.submit()) {
+      if (await this.$refs.createEventModal.submit()) {
         this.successCountDown = 5
       } else {
         this.errorCountDown = 5
