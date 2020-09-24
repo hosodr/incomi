@@ -26,12 +26,7 @@
               <b-button v-b-modal.create-channel variant="primary" class=""
                 >create a channel</b-button
               >
-              <b-modal
-                id="create-channel"
-                size="lg"
-                title="Create a new channel"
-                ><CreateChannelModal
-              /></b-modal>
+              <CreateChannelModal />
             </div>
           </div>
         </div>
