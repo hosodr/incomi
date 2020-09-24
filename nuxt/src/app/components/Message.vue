@@ -52,7 +52,9 @@ export default {
   data: () => {
     return {}
   },
-  mounted() {},
+  mounted() {
+    console.log(this.message)
+  },
   methods: {
     goThread() {
       this.getThread(this.message.child_channel_id, this.message)
