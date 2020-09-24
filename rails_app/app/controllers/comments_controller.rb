@@ -14,7 +14,7 @@ class CommentsController < ApplicationController
       :sanitize_sql_array,
       [
         """
-        select comments.id, comments.user_id, comments.channel_id, comments.message, child.id child_channel_id ,child.num_of_comments
+        select comments.id, comments.user_id, comments.channel_id, comments.message, comments.created_at,comments.updated_at, child.id child_channel_id ,child.num_of_comments
         from comments left join (     
           select channels.id, channels.parent_comment_id, count(comments.id) num_of_comments     
           from channels left join comments on channels.id=comments.channel_id     
