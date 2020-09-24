@@ -1,7 +1,12 @@
 <template>
   <div class="container">
-    <ThreadSideBar :messages="threadComments" :root-message="rootMessage" />
-    <EventSideBar :events="events" />
+    <ThreadSideBar
+      :messages="threadComments"
+      :root-message="rootMessage"
+      :reload-comments="getChannelComments"
+      :set-root-message="setRootMessage"
+    />
+    <EventSideBar :events="events" :channel-id="channelId" />
     <b-modal
       id="create-event"
       size="lg"
@@ -113,14 +118,18 @@
           <div class="col">
             <MessageList
               :messages="channelComments"
-              :get-thread="getThreadInfo"
+              :get-thread="getThreadComments"
               :show-thread="showThread"
+              :set-root-message="setRootMessage"
             />
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <SubmitBar :channel-id="channelId" />
+            <SubmitBar
+              :channel-id="channelId"
+              :reload-comments="getChannelComments"
+            />
           </div>
         </div>
       </div>
@@ -155,13 +164,13 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <SubmitBar :channel-id="channelId" />
+                  <SubmitBar
+                    :channel-id="rootMessage.channel_id"
+                    :parent-channel-id="rootMessage.parent_channel_id"
+                    :parent-comment-id="rootMessage.parent_comment_id"
+                    :reload-comments="getThreadComments"
+                  />
                 </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <SubmitBar :channel-id="channelId" />
               </div>
             </div>
           </b-card-body>
@@ -193,13 +202,7 @@ export default {
     return {
       addMyChannel: false,
       isThread: false,
-      rootMessage: {
-        commentId: 99,
-        userId: 'hoge',
-        timestamp: new Date().toDateString(),
-        message: '何しようか\nhttps://www.google.com/',
-        childThread: { channelId: 99, numOfComments: 30 },
-      },
+      rootMessage: {},
       followingUsers: [],
       hostUserId: 0,
       channelName: '',
@@ -223,14 +226,24 @@ export default {
     this.getChannelComments(this.channelId)
     this.getEventInfo(this.channelId)
   },
+  mounted() {
+    // setInterval(
+    //   function () {
+    //     this.getChannelComments(this.channelId)
+    //   }.bind(this),
+    //   1000
+    // )
+  },
   methods: {
-    getThreadInfo(threadId, rootMessage) {
-      // スレッドの情報を取得
+    getThreadComments(threadId) {
+      // スレッドのコメントを取得
       const url = `/api/comments/channel/${threadId}.json`
       this.$axios.get(url).then((res) => {
         this.threadComments = res.data.comments
-        console.log('thread', this.threadComments)
       })
+    },
+    setRootMessage(rootMessage) {
+      // スレッドのルートコメントをセット
       this.rootMessage = rootMessage
     },
     showThread() {
@@ -279,6 +292,9 @@ export default {
       this.events = await this.$axios
         .get('/api/events.json?channel_id=' + channelId)
         .then((res) => res.data.events)
+    },
+    scroll() {
+      this.$refs.messages.scrollIntoView({ block: 'end' })
     },
   },
 }
