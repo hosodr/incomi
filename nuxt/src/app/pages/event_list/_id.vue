@@ -4,6 +4,17 @@
       <div class="col-md-10">
         <div class="card mt-5">
           <div class="card-header">
+            <div class="row mt-3">
+              <b-alert
+                :show="dismissCountDown"
+                dismissible
+                variant="danger"
+                @dismissed="dismissCountDown = 0"
+                @dismiss-count-down="countDownChanged"
+              >
+                Error joining this event
+              </b-alert>
+            </div>
             <div class="row">
               <h5 class="col-md-7 mb-0 d-flex align-items-center">
                 {{ event.name }}
@@ -20,7 +31,7 @@
                     v-if="!join"
                     type="button"
                     class="btn btn-sm btn-default border-dark rounded"
-                    @click="join = !join"
+                    @click="toggleJoin()"
                   >
                     <b-icon-person-check />
                     Attend
@@ -29,7 +40,7 @@
                     v-else
                     type="button"
                     class="btn btn-sm btn-primary"
-                    @click="join = !join"
+                    @click="toggleJoin()"
                   >
                     <b-icon-person />
                     Attending
@@ -99,6 +110,7 @@ export default {
   data: () => {
     const date = new Date().toDateString()
     return {
+      dismissCountDown: 0,
       join: false,
       event: {
         name: 'Basic ML',
@@ -111,19 +123,33 @@ export default {
         channel_id: '2',
       },
       messages: [
-        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { msg: '何しようか', cmId: 5, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 1, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 2, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 3, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 4, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 5, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 1, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 2, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 3, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 4, timestamp: date, userId: 1 },
+        { message: '何しようか', cmId: 5, timestamp: date, userId: 1 },
       ],
     }
   },
-  methods: {},
+  methods: {
+    async toggleJoin() {
+      try {
+        await this.$axios.post(
+          '/api/events/' + this.$route.params.id + '/participate/1'
+        )
+        this.join = !this.join
+      } catch {
+        this.dismissCountDown = 5
+      }
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+  },
 }
 </script>

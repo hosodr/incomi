@@ -14,13 +14,22 @@
     /></b-modal>
     <div class="row mt-3">
       <b-alert
-        :show="dismissCountDown"
+        :show="errorCountDown"
         dismissible
         variant="danger"
-        @dismissed="dismissCountDown = 0"
-        @dismiss-count-down="countDownChanged"
+        @dismissed="errorCountDown = 0"
+        @dismiss-count-down="errorCountDownChanged"
       >
         Error creating a new event
+      </b-alert>
+      <b-alert
+        :show="successCountDown"
+        dismissible
+        variant="success"
+        @dismissed="successCountDown = 0"
+        @dismiss-count-down="successCountDownChanged"
+      >
+        Event created
       </b-alert>
     </div>
     <div class="row mt-3">
@@ -200,9 +209,15 @@ export default {
     return {
       addMyChannel: false,
       isThread: false,
-      rootMessage: null,
+      rootMessage: {
+        commentId: 99,
+        userId: 'hoge',
+        timestamp: new Date().toDateString(),
+        message: '何しようか\nhttps://www.google.com/',
+        childThread: { channelId: 99, numOfComments: 30 },
+      },
       followingUsers: [],
-      hostUserId: '',
+      hostUserId: 0,
       channelName: '',
       channelAbstract: '',
       channelComments: [],
@@ -210,7 +225,8 @@ export default {
       threadId: null,
       events: [],
       newEventCreated: 0,
-      dismissCountDown: 0,
+      errorCountDown: 0,
+      successCountDown: 0,
     }
   },
   computed: {
@@ -237,17 +253,17 @@ export default {
         this.isThread = true
       }
     },
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
-      this.newEventCreated = 0
+    errorCountDownChanged(errorCountDown) {
+      this.errorCountDown = errorCountDown
+    },
+    successCountDownChanged(successCountDown) {
+      this.successCountDown = successCountDown
     },
     afterCreateEvent() {
       if (this.$refs.createEventModal.submit()) {
-        this.newEventCreated = 1
-        this.dismissCountDown = 5
+        this.successCountDown = 5
       } else {
-        this.newEventCreated = 2
-        this.dismissCountDown = 5
+        this.errorCountDown = 5
       }
     },
     getChannelInfo(channelId) {

@@ -33,7 +33,9 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
 > http://localhost:8080
 
 # API
-- channels
+- channels 
+  - channel作成
+    - POST: /channels -H Content-Type: application:json -d {"name":"hoge", "abstract":"fuga", "parent_channel_id":1, "parent_comment_id":1}
   - root channelの一覧取得
     - GET: /channels 
       - {"channels":[{"id":1, "name":"channel name", "abstract":"chanel abstract", "num_of_comments":1, "num_of_events":1},...,{}]} 
@@ -53,7 +55,7 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
       - {"id":13,"user_id":1,"channel_id":1,"message":"hogehoge","created_at":"2020-09-23T09:01:45.000Z","updated_at":"2020-09-23T09:01:45.000Z","url":"http://localhost:3000/comments/13.json"}
 - events
   - event作成
-    - POST: /events -H application:json -d {"name":"hoge", "abstract":"fuga", "channel_id":1, "host_user_id":2,"host_date":"2020-10-05 00:00:00","from_date":"2020-10-05 00:00:00","to_date":"2020-10-05 00:00:00"}
+    - POST: /events -H Content-Type: application:json -d {"name":"hoge", "abstract":"fuga", "channel_id":1, "host_user_id":2,"host_date":"2020-10-05 00:00:00","from_date":"2020-10-05 00:00:00","to_date":"2020-10-05 00:00:00"}
       - {"id":13,"channel_id":1,"name":"hoge","abstract":"fuga","zoom_url":"https://zoom.us/j/98725049091?pwd=WmNPL25WZkdyYzY4MHVIK01qTXFkdz09","host_date":"2020-10-05T00:00:00.000Z","from_date":null,"to_date":null,"is_delete":false,"created_at":"2020-09-18T13:39:10.000Z","updated_at":"2020-09-18T13:39:10.000Z"}
      
  
@@ -78,4 +80,6 @@ DBの初期化に成功したらコンテナを立ち上げて確認してみま
         - {status code: 200}
       - 作成失敗時
         - {status code: 400}
+  - event 参加取り消し
+    - DELETE: /events/:id/cancel/:user_id
         
