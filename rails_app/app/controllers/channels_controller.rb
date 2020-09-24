@@ -31,6 +31,64 @@ class ChannelsController < ApplicationController
   # GET /channels/1
   # GET /channels/1.json
   def show
+    channelId = params[:id]
+
+    # 該当チャンネル取得
+    channelSql = "select name, abstract , parent_channel_id from channels
+    where id = " + channelId
+
+    channel = ActiveRecord::Base.connection.select_one(channelSql).to_hash
+
+    # 該当チャンネルのコメント取得
+    commentSql = "select id, user_id, channel_id, message from comments 
+    where channel_id = " + channelId
+
+    comments = ActiveRecord::Base.connection.select_all(commentSql)
+
+    # コメントのハッシュの配列を作成
+    result = comments.to_hash
+
+    logger.debug(result[0])
+
+    # 特定コメントに対して子コメントを取得
+    commentIds = result.map { |c| c["id"] }.join(',')
+    childChannelSql = "select id, parent_comment_id from channels where parent_comment_id in (" + commentIds + ")"
+    childChannels = ActiveRecord::Base.connection.select_all(childChannelSql).to_hash
+    childChannelIds = childChannels.map { |c| c["id"] }.join(',')
+    childCommentSql = "select channel_id from comments where channel_id in (" + childChannelIds + ")"
+    childComments = ActiveRecord::Base.connection.select_all(childCommentSql).to_hash
+
+    childCommentNumber = Hash.new
+    childChannels.each_with_index do |x, i|
+      c = childComments.select { |n| n["channel_id"] == childChannels[i]["id"] }.size
+      childCommentNumber[childChannels[i]["id"]] = c
+    end
+
+
+
+    # コメントのハッシュを作成
+    commentResult = Array.new
+    commentArray = result.to_a
+    commentArray.each_with_index do |x, i|
+      commentResult[i] = {comment_id:commentArray[i]["id"], user_id:commentArray[i]["user_id"], 
+      channel_id:commentArray[i]["channel_id"], message:commentArray[i]["message"]}
+      
+      childChannels.each_with_index do |y, j|
+        if childChannels[j]["parent_comment_id"] == commentArray[i]["id"] then
+          childChannnel = {channel_id: childChannels[j]["id"], num_of_comments: childCommentNumber[childChannels[j]["id"]]}
+          commentResult[i]["child_channel"] = childChannnel
+        end
+      end
+    end
+
+    # チャンネルのハッシュを作成
+    channelHash = Hash.new
+    channelHash = {comments:commentResult, is_root: channel["parent_channel_id"].nil?, channel_name: channel["name"], channel_abstract: channel["abstract"]}
+ 
+    respond_to do |format|
+      format.json { render json: channelHash, status: :ok}
+    end
+
   end
 
   # GET /channels/new
