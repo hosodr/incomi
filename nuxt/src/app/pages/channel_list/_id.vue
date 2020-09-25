@@ -1,18 +1,23 @@
 <template>
   <div class="container">
-    <ThreadSideBar :messages="threadComments" :root-message="rootMessage" />
-    <EventSideBar :events="events" />
+    <ThreadSideBar
+      :messages="threadComments"
+      :root-message="rootMessage"
+      :thread-id="threadId"
+      :parent-channel-id="channelId"
+      :parent-comment-id="parentCommentId"
+      :get-thread-comments="getThreadComments"
+      :get-channel-comments="getChannelComments"
+    />
+    <EventSideBar :events="events" :channel-id="channelId" />
     <b-modal
       id="create-event"
       size="lg"
       title="Create a new event"
       @ok="afterCreateEvent()"
-      ><CreateEventModal
-        ref="createEventModal"
-        :channel-id="channelId"
-        :host-user-id="hostUserId"
+      ><CreateEventModal ref="createEventModal" :channel-id="channelId"
     /></b-modal>
-    <div class="row mt-3">
+    <!-- <div class="row mt-3">
       <b-alert
         :show="errorCountDown"
         dismissible
@@ -31,7 +36,7 @@
       >
         Event created
       </b-alert>
-    </div>
+    </div> -->
     <div class="row mt-3">
       <div class="col-md-8">
         <div class="row card-header pb-0">
@@ -113,14 +118,18 @@
           <div class="col">
             <MessageList
               :messages="channelComments"
-              :get-thread="getThreadInfo"
+              :get-thread="getThreadComments"
               :show-thread="showThread"
+              :set-root-message="setRootMessage"
             />
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <SubmitBar :channel-id="channelId" />
+            <SubmitBar
+              :channel-id="channelId"
+              :get-channel-comments="getChannelComments"
+            />
           </div>
         </div>
       </div>
@@ -138,14 +147,15 @@
             </b-nav>
           </b-card-header>
 
-          <b-card-body v-if="isThread && threadComments">
-            <div>
+          <b-card-body v-if="isThread" class="pb-0">
+            <div v-if="threadComments !== null">
               <div class="row height-fixed scroll">
                 <div class="col">
                   <Message
                     v-if="rootMessage"
                     :message="rootMessage"
                     :repliable="false"
+                    :set-root-message="setRootMessage"
                   />
                   <p class="text-muted m-0 text-center">
                     {{ threadComments.length }} replies
@@ -155,18 +165,19 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <SubmitBar :channel-id="channelId" />
+                  <SubmitBar
+                    :channel-id="threadId"
+                    :parent-channel-id="channelId"
+                    :parent-comment-id="parentCommentId"
+                    :get-thread-comments="getThreadComments"
+                    :get-channel-comments="getChannelComments"
+                  />
                 </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <SubmitBar :channel-id="channelId" />
               </div>
             </div>
           </b-card-body>
 
-          <b-card-body v-else class="px-1">
+          <b-card-body v-else class="px-1 pb-0">
             <EventList :events="events" :channel-id="channelId" />
           </b-card-body>
         </b-card>
@@ -193,24 +204,18 @@ export default {
     return {
       addMyChannel: false,
       isThread: false,
-      rootMessage: {
-        commentId: 99,
-        userId: 'hoge',
-        timestamp: new Date().toDateString(),
-        message: '何しようか\nhttps://www.google.com/',
-        childThread: { channelId: 99, numOfComments: 30 },
-      },
+      rootMessage: {},
       followingUsers: [],
-      hostUserId: 0,
       channelName: '',
       channelAbstract: '',
       channelComments: [],
-      threadComments: [],
+      threadComments: null,
       threadId: null,
       events: [],
       newEventCreated: 0,
       errorCountDown: 0,
       successCountDown: 0,
+      parentCommentId: null,
     }
   },
   computed: {
@@ -223,20 +228,30 @@ export default {
     this.getChannelComments(this.channelId)
     this.getEventInfo(this.channelId)
   },
+  mounted() {
+    // setInterval(
+    //   function () {
+    //     this.getChannelComments(this.channelId)
+    //   }.bind(this),
+    //   1000
+    // )
+  },
   methods: {
-    getThreadInfo(threadId, rootMessage) {
-      // スレッドの情報を取得
+    getThreadComments(threadId) {
+      // スレッドのコメントを取得
       const url = `/api/comments/channel/${threadId}.json`
       this.$axios.get(url).then((res) => {
         this.threadComments = res.data.comments
-        console.log('thread', this.threadComments)
       })
+    },
+    setRootMessage(rootMessage) {
+      // スレッドのルートコメントをセット
       this.rootMessage = rootMessage
+      this.threadId = rootMessage.child_channel_id
+      this.parentCommentId = rootMessage.id
     },
     showThread() {
-      if (this.threadComments) {
-        this.isThread = true
-      }
+      this.isThread = true
     },
     errorCountDownChanged(errorCountDown) {
       this.errorCountDown = errorCountDown
@@ -250,7 +265,7 @@ export default {
       } else {
         this.errorCountDown = 5
       }
-      await this.getEventInfo(this.channelId)
+      this.getEventInfo(this.channelId)
     },
     getChannelInfo(channelId) {
       // チャンネルの詳細情報を取得する
@@ -279,6 +294,9 @@ export default {
       this.events = await this.$axios
         .get('/api/events.json?channel_id=' + channelId)
         .then((res) => res.data.events)
+    },
+    scroll() {
+      this.$refs.messages.scrollIntoView({ block: 'end' })
     },
   },
 }

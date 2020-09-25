@@ -3,8 +3,9 @@ import Vuex from 'vuex'
 const store = () =>
   new Vuex.Store({
     state: {
-      username: 'hoge',
-      userId: '1',
+      username: null,
+      userId: null,
+      email: 'gunjoiro_rabit@gunjo.com',
     },
     getters: {
       isSignin(state) {
@@ -15,8 +16,12 @@ const store = () =>
       storeUsername(state, username) {
         state.username = username
       },
+      storeUserId(state, userId) {
+        state.userId = userId
+      },
       signOut(state) {
         state.username = null
+        state.userId = null
       },
     },
   })

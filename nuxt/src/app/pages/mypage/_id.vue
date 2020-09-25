@@ -55,10 +55,7 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="channel in channels">
-              <ChannelItem
-                :key="channel.channel.channelId"
-                :channel="channel"
-              />
+              <ChannelItem :key="channel.id" :channel="channel" />
             </template>
           </div>
         </div>
@@ -73,7 +70,7 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="event in events">
-              <EventItem :key="event.eventId" :event="event" />
+              <EventItem :key="event.id" :event="event" />
             </template>
           </div>
         </div>
@@ -88,10 +85,7 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="channel in channels">
-              <ChannelItem
-                :key="channel.channel.chanenldId"
-                :channel="channel"
-              />
+              <ChannelItem :key="channel.id" :channel="channel" />
             </template>
           </div>
         </div>
@@ -106,7 +100,7 @@
           </div>
           <div class="card-body p-0 height-fixed scroll">
             <template v-for="event in events">
-              <EventItem :key="event.eventId" :event="event" />
+              <EventItem :key="event.id" :event="event" />
             </template>
           </div>
         </div>
@@ -128,6 +122,20 @@ export default {
     BIconChatDots,
     BIconCalendar2Event,
   },
+  async fetch() {
+    const tmp = await this.$axios
+      .get('/api/channels.json')
+      .then((res) => res.data)
+    const channels = tmp.channels
+    for (let i = 0; i < channels.length; i++) {
+      channels[i].numOfComments = channels[i].num_of_comments
+      channels[i].numOfEvents = channels[i].num_of_events
+    }
+    this.channels = channels
+    this.events = await this.$axios
+      .get('/api/events.json?channel_id=1')
+      .then((res) => res.data.events)
+  },
   data: () => {
     return {
       name: 'hoge',
@@ -141,10 +149,7 @@ export default {
       events: [],
     }
   },
-  created() {
-    this.events = this.$getChannelEventInfo(1)
-    this.channels = this.$getChannels()
-  },
+  created() {},
 }
 </script>
 

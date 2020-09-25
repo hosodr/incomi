@@ -53,19 +53,23 @@
             <p class="card-text">
               {{ event.abstract }}
             </p>
-            <table>
+            <table class="table">
               <tr>
                 <th>Date:</th>
-                <td>{{ event.host_date }}</td>
+                <td class="text-break">{{ event.host_date | formatTime }}</td>
               </tr>
               <tr>
                 <th>Registration Period:</th>
-                <td>{{ event.from_date }}~{{ event.to_date }}</td>
+                <td class="text-break">
+                  {{ event.from_date | formatTime }}~{{
+                    event.to_date | formatTime
+                  }}
+                </td>
               </tr>
               <tr>
                 <th>Zoom URL:</th>
-                <td>
-                  <a :href="event.zoomUrl">{{ event.zoom_url }}</a>
+                <td class="text-break">
+                  <autolink :text="event.zoom_url" />
                 </td>
               </tr>
             </table>
@@ -76,7 +80,7 @@
           >
         </div>
 
-        <div class="card mt-2">
+        <!-- <div class="card mt-2">
           <div class="card-header">Discussion Thread</div>
           <ul class="list-group">
             <template v-for="(message, key) in messages">
@@ -89,7 +93,7 @@
               />
             </template>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -102,38 +106,22 @@ export default {
     BIconPersonCheck,
     BIconPerson,
   },
+  filters: {
+    formatTime(time) {
+      return time.split('.')[0].replace('T', ' ')
+    },
+  },
   async fetch() {
     this.event = await this.$axios
       .get('/api/events/' + this.$route.params.id + '.json')
       .then((res) => res.data)
   },
   data: () => {
-    const date = new Date().toDateString()
+    // const date = new Date().toDateString()
     return {
       dismissCountDown: 0,
       join: false,
-      event: {
-        name: 'Basic ML',
-        abstract:
-          "We'll study ML, machine kearning. In paticular, we forcus on reinforcement learning.",
-        host_date: new Date().toTimeString(),
-        from_date: new Date().toDateString(),
-        to_date: new Date().toDateString(),
-        zoom_url: 'zoom.url',
-        channel_id: '2',
-      },
-      messages: [
-        { message: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 5, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 1, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 2, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 3, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 4, timestamp: date, userId: 1 },
-        { message: '何しようか', cmId: 5, timestamp: date, userId: 1 },
-      ],
+      event: {},
     }
   },
   methods: {

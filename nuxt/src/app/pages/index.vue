@@ -8,7 +8,8 @@
     <div class="container py-5">
       <div class="row justify-content-center">
         <h2 class="text-center">
-          Let's 「learn」「talk」「connect」 more about IT
+          Let's <strong>learn</strong>, <strong>talk</strong>, and
+          <strong>connect</strong> more about IT
         </h2>
       </div>
       <div class="row justify-content-center">
@@ -65,7 +66,7 @@
       <div class="row justify-content-center">
         <div class="col-md-5 mr-1">
           <div class="row card-header">
-            <h5 class="text-center">最新のチャンネル</h5>
+            <h5 class="text-center mb-0">latest channels</h5>
           </div>
           <div class="row list-group height-fixed scroll">
             <template v-for="channel in channels">
@@ -75,7 +76,7 @@
         </div>
         <div class="col-md-5 ml-1">
           <div class="row card-header">
-            <h5 class="text-center">最新のイベント</h5>
+            <h5 class="text-center mb-0">latest events</h5>
           </div>
           <div class="row justify-content-center height-fixed scroll">
             <template v-for="event in events">

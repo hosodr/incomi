@@ -6,7 +6,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item to="/channel_list/" nuxt>Home</b-nav-item>
+        <b-nav-item to="/channel_list/" nuxt>Channels</b-nav-item>
         <b-nav-item :to="{ name: 'mypage-id', params: { id: userId } }" nuxt
           >My page</b-nav-item
         >
@@ -21,15 +21,17 @@
             <template v-slot:button-content>
               <em>{{ username }}</em>
             </template>
-            <b-dropdown-item to="/channel_list/" nuxt>signout</b-dropdown-item>
+            <b-dropdown-item to="/" nuxt @click="signout"
+              >signout</b-dropdown-item
+            >
           </b-nav-item-dropdown>
         </template>
         <template v-else>
-          <nuxt-link class="btn btn-sm btn-light m-1" to="/signin" nuxt
-            >signin</nuxt-link
+          <b-nav-item class="btn btn-sm btn-light m-1 p-0" to="/signin" nuxt
+            ><p class="text-dark m-0">signin</p></b-nav-item
           >
-          <nuxt-link class="btn btn-sm btn-light m-1" to="/signup" nuxt
-            >signup</nuxt-link
+          <b-nav-item class="btn btn-sm btn-light m-1 p-0" to="/signup" nuxt
+            ><p class="text-dark m-0">signup</p></b-nav-item
           >
         </template>
 
@@ -52,7 +54,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 export default {
   computed: {
     ...mapState({
@@ -60,6 +62,17 @@ export default {
       username: (state) => state.username,
     }),
     ...mapGetters(['isSignin']),
+  },
+  methods: {
+    ...mapMutations({
+      storeUsername: 'storeUsername',
+      storeUserId: 'storeUserId',
+    }),
+    signout() {
+      this.storeUsername(null)
+      this.storeUserId(null)
+      alert('do signout')
+    },
   },
 }
 </script>

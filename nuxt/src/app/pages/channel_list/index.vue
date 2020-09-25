@@ -60,20 +60,20 @@ export default {
     }
   },
   async created() {
-    await this.getChannels()
+    // await this.getChannels()
   },
   methods: {
-    async getChannels() {
-      const tmp = await this.$axios
-        .get('/api/channels.json')
-        .then((res) => res.data)
-      const channels = tmp.channels
-      for (let i = 0; i < channels.length; i++) {
-        channels[i].numOfComments = channels[i].num_of_comments
-        channels[i].numOfEvents = channels[i].num_of_events
-      }
-      this.channels = channels
-    },
+    // async getChannels() {
+    //   const tmp = await this.$axios
+    //     .get('/api/channels.json')
+    //     .then((res) => res.data)
+    //   const channels = tmp.channels
+    //   for (let i = 0; i < channels.length; i++) {
+    //     channels[i].numOfComments = channels[i].num_of_comments
+    //     channels[i].numOfEvents = channels[i].num_of_events
+    //   }
+    //   this.channels = channels
+    // },
   },
 }
 </script>

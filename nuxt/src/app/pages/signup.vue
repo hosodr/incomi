@@ -3,10 +3,11 @@
     <div class="row justify-content-center">
       <div class="py-5 col col-md-4">
         <img
-          class="d-block mx-auto mb-4"
-          src="https://getbootstrap.com/docs/4.5/assets/brand/bootstrap-solid.svg"
+          class="d-block mx-auto mb-0"
+          src="@/assets/gunjoiro_rabit.png"
           width="70"
         />
+        <h4 class="incomi text-center mb-3" style="color: #4b64a1">incomi</h4>
         <h2 class="text-center">create an acount</h2>
         <div v-if="failed" class="alert alert-danger" role="alert">
           {{ errorMessage }}
@@ -112,31 +113,14 @@ export default {
   },
   methods: {
     onSubmit() {
-      // const form = new FormData()
-      // form.set('username', this.username)
-      // form.set('password', this.password1)
-      // this.$axios
-      //   .post('/api/auth/register/', form)
-      //   .then((res) => {
-      //     this.$axios
-      //       .post('/api/auth/signin/', form)
-      //       .then((res) => {
-      //         const token = res.data.token
-      //         this.storeToken(token)
-      //         this.$store.this.$router.push('/bbs_list')
-      //       })
-      //       .catch(() => {
-      //         alert('ログインエラー')
-      //       })
-      //   })
-      //   .catch(() => {
-      //     this.errorMessage = '既に使われているユーザーネームです'
-      //     this.failed = true
-      //   })
-      this.$router.push('/')
+      this.storeUsername('username')
+      this.storeUserId(1)
+      alert('create your account')
+      this.$router.push('/channel_list')
     },
     ...mapMutations({
-      storeToken: 'storeToken',
+      storeUsername: 'storeUsername',
+      storeUserId: 'storeUserId',
     }),
   },
 }
