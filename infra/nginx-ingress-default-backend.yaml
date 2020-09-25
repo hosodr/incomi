@@ -1,0 +1,35 @@
+# author: Karakate
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: nginx-ingress
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2020-09-23T13:24:07Z"
+  labels:
+    app: nginx-ingress
+    app.kubernetes.io/managed-by: Helm
+    chart: nginx-ingress-1.41.3
+    component: default-backend
+    heritage: Helm
+    release: nginx-ingress
+  name: nginx-ingress-default-backend
+  namespace: default
+  resourceVersion: "644228"
+  selfLink: /api/v1/namespaces/default/services/nginx-ingress-default-backend
+  uid: c8bd3aff-a8f7-4ac8-87bf-9310e0c573e8
+spec:
+  clusterIP: 10.92.7.68
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: nginx-ingress
+    app.kubernetes.io/component: default-backend
+    release: nginx-ingress
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

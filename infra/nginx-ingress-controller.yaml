@@ -1,0 +1,46 @@
+# author: Karakate
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: nginx-ingress
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2020-09-23T13:24:07Z"
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    app: nginx-ingress
+    app.kubernetes.io/managed-by: Helm
+    chart: nginx-ingress-1.41.3
+    component: controller
+    heritage: Helm
+    release: nginx-ingress
+  name: nginx-ingress-controller
+  namespace: default
+  resourceVersion: "644424"
+  selfLink: /api/v1/namespaces/default/services/nginx-ingress-controller
+  uid: eab5924a-0f10-4c60-b622-bded74aebc84
+spec:
+  clusterIP: 10.92.15.139
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    nodePort: 31339
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: https
+    nodePort: 31108
+    port: 443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app: nginx-ingress
+    app.kubernetes.io/component: controller
+    release: nginx-ingress
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: <redacted>
