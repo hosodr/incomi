@@ -1,0 +1,39 @@
+# author: Karakate
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/backends: '{"k8s-be-30421--b170d678eed40e29":"HEALTHY","k8s-be-32100--b170d678eed40e29":"UNHEALTHY"}'
+    ingress.kubernetes.io/forwarding-rule: k8s-fw-default-back-https-ingress--b170d678eed40e29
+    ingress.kubernetes.io/https-forwarding-rule: k8s-fws-default-back-https-ingress--b170d678eed40e29
+    ingress.kubernetes.io/https-target-proxy: k8s-tps-default-back-https-ingress--b170d678eed40e29
+    ingress.kubernetes.io/ssl-cert: k8s-ssl-b8bf94d943f5ec63-1b697fe4b288ad24--b170d678eed40e29
+    ingress.kubernetes.io/static-ip: k8s-fw-default-back-https-ingress--b170d678eed40e29
+    ingress.kubernetes.io/target-proxy: k8s-tp-default-back-https-ingress--b170d678eed40e29
+    ingress.kubernetes.io/url-map: k8s-um-default-back-https-ingress--b170d678eed40e29
+  creationTimestamp: "2020-09-24T01:07:38Z"
+  finalizers:
+  - networking.gke.io/ingress-finalizer
+  generation: 1
+  name: back-https-ingress
+  namespace: default
+  resourceVersion: "1362707"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/ingresses/back-https-ingress
+  uid: 52dbe84e-6524-4312-a407-ac4ef80da268
+spec:
+  rules:
+  - host: dm12.club
+    http:
+      paths:
+      - backend:
+          serviceName: back
+          servicePort: 80
+  tls:
+  - hosts:
+    - dm12.club
+    secretName: back-tls
+status:
+  loadBalancer:
+    ingress:
+    - ip: <redacted>

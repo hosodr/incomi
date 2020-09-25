@@ -187,6 +187,8 @@
 </template>
 
 <script>
+// Owner: Sato
+// Karakate contributed to the JS part of this file (not owner)
 import {
   BIconCalendar2Event,
   BIconChatRightText,

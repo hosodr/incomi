@@ -1,0 +1,38 @@
+# author: Karakate
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose-prod-complete.yml
+    kompose.image-pull-policy: Always
+    kompose.service.type: LoadBalancer
+    kompose.version: 1.19.0 (f63a961c)
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"kompose.cmd":"kompose convert -f ../docker-compose-prod-complete.yml","kompose.image-pull-policy":"Always","kompose.service.type":"LoadBalancer","kompose.version":"1.19.0 (f63a961c)"},"creationTimestamp":null,"labels":{"io.kompose.service":"back"},"name":"back","namespace":"default"},"spec":{"ports":[{"name":"80","port":80,"targetPort":3000}],"selector":{"io.kompose.service":"back"},"type":"LoadBalancer"},"status":{"loadBalancer":{}}}
+  creationTimestamp: "2020-09-21T18:29:35Z"
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    io.kompose.service: back
+  name: back
+  namespace: default
+  resourceVersion: "61099"
+  selfLink: /api/v1/namespaces/default/services/back
+  uid: fa13cb9d-7d60-4200-9bf8-5c58ef753b19
+spec:
+  clusterIP: 10.92.9.91
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: "80"
+    nodePort: 32100
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    io.kompose.service: back
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: <redacted>
