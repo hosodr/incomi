@@ -88,6 +88,7 @@
 </template>
 
 <script>
+// Owner: Karakate
 export default {
   data: () => {
     return {

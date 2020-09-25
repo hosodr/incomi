@@ -1,5 +1,7 @@
 FROM node:12.5.0-alpine as builder
 
+# Owner: Karakate
+
 ENV LANG C.UTF-8 && \
 ENV TZ Asia/Tokyo
 

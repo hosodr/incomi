@@ -42,6 +42,8 @@
 </template>
 
 <script>
+// Owner: Sato
+// Karakate contributed to the JS part of this file (not owner)
 export default {
   async fetch() {
     const tmp = await this.$axios

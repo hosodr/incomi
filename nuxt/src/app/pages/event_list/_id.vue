@@ -100,6 +100,8 @@
 </template>
 
 <script>
+// Owner: Sato
+// Karakate contributed to the JS part of this file (not owner)
 import { BIconPersonCheck, BIconPerson } from 'bootstrap-vue'
 export default {
   components: {

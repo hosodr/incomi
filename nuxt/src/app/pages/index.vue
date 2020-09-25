@@ -108,6 +108,8 @@
 </template>
 
 <script>
+// Owner: Sato
+// API Integration (JS Part) by Karakate
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Vue from 'vue'
 
