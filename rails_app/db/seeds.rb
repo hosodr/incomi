@@ -44,7 +44,7 @@ comment14 = Comment.create!(user_id:5, channel_id:6, message: "If someone know t
 channel9 = Channel.create!(parent_channel_id:6, parent_comment_id:14)
 comment15 = Comment.create!(user_id:1, channel_id:10, message: "Maybe up to page 30")
 
-event4 = Event.create!(channel_id:6,host_user_id:3 ,name:"Let's study Java!", abstract:"Studing Java", from_date:'2020-10-01', to_date:'2020-10-02')
+event4 = Event.create!(channel_id:6,host_user_id:3 ,name:"Let's study Java!", abstract:"Studing Java", from_date:'2020-10-01', to_date:'2020-10-02', zoom_url:"https://zoom.us/j/94167433905?pwd=VkYzSytDSFR1ZVZEWFFQVFZxRS85UT09", host_date:'2020-10-21')
 
 
 participation1 = Participation.create!(user_id:1,event_id:1)
