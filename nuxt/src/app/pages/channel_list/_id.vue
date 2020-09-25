@@ -155,6 +155,7 @@
                     v-if="rootMessage"
                     :message="rootMessage"
                     :repliable="false"
+                    :set-root-message="setRootMessage"
                   />
                   <p class="text-muted m-0 text-center">
                     {{ threadComments.length }} replies
@@ -264,7 +265,7 @@ export default {
       } else {
         this.errorCountDown = 5
       }
-      await this.getEventInfo(this.channelId)
+      this.getEventInfo(this.channelId)
     },
     getChannelInfo(channelId) {
       // チャンネルの詳細情報を取得する

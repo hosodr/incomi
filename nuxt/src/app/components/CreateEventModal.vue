@@ -112,7 +112,7 @@ export default {
     },
   },
   methods: {
-    submit() {
+    async submit() {
       const url = '/api/events.json'
       const params = {
         name: this.eventName,
@@ -128,7 +128,7 @@ export default {
           'Content-Type': 'application/json',
         },
       }
-      this.$axios
+      await this.$axios
         .post(url, params, config)
         .then(() => {
           alert('created')
