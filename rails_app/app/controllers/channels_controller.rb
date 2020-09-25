@@ -3,6 +3,8 @@ class ChannelsController < ApplicationController
 
   # GET /channels
   # GET /channels.json
+  # author: hosoda
+  # 時間がないのでraw sql
   def index
     sql = """
     select comment_count.id, name, abstract, num_of_comments, num_of_events
@@ -38,7 +40,7 @@ class ChannelsController < ApplicationController
       rescue ActiveRecord::RecordNotFound
         format.json { render json: :not_found, status: :not_found }
       end
-      format.json {render :info, status: :ok, location: @channel}
+        format.json {render :info, status: :ok, location: @channel}
     end
   end
 

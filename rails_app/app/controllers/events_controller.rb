@@ -48,13 +48,16 @@ class EventsController < ApplicationController
   #イベント参加をキャンセルするAPI
   #delete events/:id/cancel/:user_id
   #author naya
+  # fixed by: hosoda
   def cancel
     participant = Participation.find_by(user_id: params[:user_id], event_id: params[:id])
-    if participant != nil
-      participant.destroy
-      render status: :ok, json: { status: :ok }
-    else
-      render status: :no_content, json: { status: :no_content }
+    respond_to do |format|
+      if participant != nil
+        participant.destroy
+        format.json { head :no_content }
+      else
+        format.json { render json: :not_found, status: :not_found }
+      end
     end
   end
 
@@ -68,6 +71,8 @@ class EventsController < ApplicationController
   end
 
   # 100urls/24hours can be generated
+  # author: hosoda
+  # 時間がないのでAPI_KEY等は直に埋め込みました。
   def access
     uri = URI.parse(MEETING_URL)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -86,6 +91,7 @@ class EventsController < ApplicationController
 
   # POST /events
   # POST /events.json
+  # author: hosoda
   def create
     zoom_url = access
     params[:event][:zoom_url] = zoom_url

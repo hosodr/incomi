@@ -2,7 +2,12 @@ class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
   protect_from_forgery with: :null_session
 
-  # ZOOM contant
+  # ZOOM constants
+  # 時間がなかったので直に埋め込みました。
+  # zoom api も個人のアカウントで直接叩いています。
+  # 本来はincomiのユーザー自身の持つアカウント情報を使うべきでした。
+  # あと本当はzoomとの連携ではなくincomi内でeventも完結できるようにしたかったです
+  # author: hosoda
   ZOOM_API_KEY = "hK6x9GGqQoqb07k0CJY3gw"
   ZOOM_API_SECRET = "qv6NnyFfACjpziVCuXP61ETZX5OfSxeGxl1B"
   ZOOM_USER_ID = "zZIC4Ln0TZ2lRdIpwp8szA"

@@ -52,5 +52,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  # 時間がなかったので開発環境用にすべてのIPアドレスからのアクセスを許可しました
+  # 今後の拡張としてセキュリティ麺にも配慮した開発環境を考えていきたいです
+  # author: hosoda
   config.web_console.whitelisted_ips = '0.0.0.0/0'
 end
