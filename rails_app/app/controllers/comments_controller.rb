@@ -9,6 +9,7 @@ class CommentsController < ApplicationController
 
   # GET /comments/channel/:channel_id
   # author hosoda
+  # 時間がないのでraw sql
   def comment_list
     sql = ActiveRecord::Base.send(
       :sanitize_sql_array,
@@ -48,6 +49,7 @@ class CommentsController < ApplicationController
 
   # POST /comments
   # POST /comments.json
+  # autho: hosoda
   def create
     @comment = Comment.new(comment_params)
 
