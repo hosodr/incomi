@@ -39,3 +39,5 @@ RUN yarn install
 EXPOSE 3000
 ENV HOST 0.0.0.0
 CMD ["yarn", "run", "dev"]
+
+# author: hosoda

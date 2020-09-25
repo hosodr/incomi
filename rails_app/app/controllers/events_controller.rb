@@ -1,15 +1,64 @@
+require 'net/https'
+require 'net/http'
+require 'uri'
+require 'json'
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
-  # GET /events
+  # GET /events?channel_id={id}&word={}
   # GET /events.json
+  #author naya
   def index
-    @events = Event.all
+    events = Hash.new
+    if params[:channel_id] == nil
+      res = Event.all.order(:host_date)
+    else
+      res = Event.where(channel_id: params[:channel_id])
+    end
+    search_word = params[:word]
+    res = res.where('name LIKE ?', "%#{search_word}%").order(:host_date)
+    events["events"] = res.to_a
+    render json: events
   end
 
+  #イベント詳細を表示するAPI(getEventInfo(eventID))
   # GET /events/1
   # GET /events/1.json
+  #author naya
   def show
+    render json: @event
+  end
+
+  #ログイン中のユーザーがイベントに参加するAPI
+  #POST events/:id/participate/:user_id
+  #author naya
+  def participate
+    #ユーザー認証をdeviseで実装した場合current_userヘルパーでログイン中のユーザーを取得できる
+    #user = current_user
+    #ユーザー認証をつけない場合は受け取ったidのユーザーを登録
+    user = User.find(params[:user_id])
+    participant = Participation.new(user_id: params[:user_id], event_id: params[:id])
+    if participant.save
+      render status: :ok, json: { status: :ok }
+    else
+      render status: :bad_request, json: { status: :bad_request }
+    end
+  end
+
+  #イベント参加をキャンセルするAPI
+  #delete events/:id/cancel/:user_id
+  #author naya
+  # fixed by: hosoda
+  def cancel
+    participant = Participation.find_by(user_id: params[:user_id], event_id: params[:id])
+    respond_to do |format|
+      if participant != nil
+        participant.destroy
+        format.json { head :no_content }
+      else
+        format.json { render json: :not_found, status: :not_found }
+      end
+    end
   end
 
   # GET /events/new
@@ -21,17 +70,36 @@ class EventsController < ApplicationController
   def edit
   end
 
+  # 100urls/24hours can be generated
+  # author: hosoda
+  # 時間がないのでAPI_KEY等は直に埋め込みました。
+  def access
+    uri = URI.parse(MEETING_URL)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    req = Net::HTTP::Post.new(uri.path)
+    req["Authorization"] = "Bearer #{JWT}"
+    req["Content-Type"] = "application/json"
+      req.body = {
+          "type":1,
+      }.to_json
+    res = http.request(req)
+    result = JSON.parse(res.body)
+    return result["join_url"]
+  end
+
   # POST /events
   # POST /events.json
+  # author: hosoda
   def create
+    zoom_url = access
+    params[:event][:zoom_url] = zoom_url
     @event = Event.new(event_params)
-
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render :show, status: :created, location: @event }
       else
-        format.html { render :new }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -69,6 +137,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:channel_id, :name, :abstract, :zoom_url, :host_date, :from_date, :to_date, :is_delete)
+      params.require(:event).permit(:channel_id, :name, :abstract, :zoom_url, :host_date, :from_date, :to_date, :is_delete, :host_user_id)
     end
 end

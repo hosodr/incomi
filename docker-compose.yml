@@ -7,6 +7,8 @@ services:
         volumes: 
             - mysql_data:/var/lib/mysql
     back:
+        environment:
+         - SPROCKETS_CACHE=/cache
         build: rails_app
         command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
         image: app_image
@@ -18,6 +20,7 @@ services:
         volumes: 
             - ./rails_app:/rails_app
             - gem_data:/usr/local/bundle
+            - cache:/cache
         depends_on: 
             - db
     front:
@@ -39,5 +42,7 @@ volumes:
     gem_data:
     mysql_data:
     node_modules_data:
+    cache:
 
+# author: hosoda
 

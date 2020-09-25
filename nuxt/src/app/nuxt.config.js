@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+dotenv.config()
 export default {
   /*
    ** Nuxt rendering mode
@@ -13,6 +15,9 @@ export default {
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
    */
+  env: {
+    API_URL: process.env.API_URL,
+  },
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -34,7 +39,21 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: [
+    {
+      src: '~/plugins/persistedstate.js',
+      ssr: false,
+    },
+    {
+      src: '~/plugins/router.js',
+    },
+    {
+      src: '~/plugins/autolink.js',
+    },
+    {
+      src: '~/plugins/functions.js',
+    },
+  ],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -56,19 +75,37 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
+    '@nuxtjs/dotenv',
     '@nuxtjs/pwa',
+    'nuxt-webfontloader',
   ],
+  webfontloader: {
+    google: {
+      families: [
+        'Designed by LatinoType',
+        'Acme',
+        'Balsamiq Sans',
+        'Rammetto One',
+        'Skranji',
+        'Londrina Solid',
+        'Fredoka One',
+      ],
+    },
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    proxy: true,
+    baseURL: process.env.API_URL || 'http://localhost:3000',
+    browserBaseURL: process.env.API_URL,
+    proxy: !(process.env.SETUP === 'prod'),
+    credentials: false,
   },
 
   proxy: {
     '/api/': {
-      target: 'http://back:3000',
+      target: process.env.API_URL || 'http://back:3000',
       pathRewrite: { '^/api/': '' },
     },
   },

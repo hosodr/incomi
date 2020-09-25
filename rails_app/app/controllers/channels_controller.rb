@@ -1,15 +1,47 @@
 class ChannelsController < ApplicationController
-  before_action :set_channel, only: [:show, :edit, :update, :destroy]
+  before_action :set_channel, only: [:edit, :update, :destroy]
 
   # GET /channels
   # GET /channels.json
+  # author: hosoda
+  # 時間がないのでraw sql
   def index
-    @channels = Channel.all
+    sql = """
+    select comment_count.id, name, abstract, num_of_comments, num_of_events
+    from (
+        select channels.id id, channels.name, channels.abstract, count(comments.id) num_of_comments
+        from channels left join comments on channels.id=comments.channel_id
+        where channels.parent_channel_id is null
+        group by channels.id
+    ) comment_count join (
+        select channels.id, count(events.id) num_of_events
+        from channels left join events on channels.id=events.channel_id
+        where channels.parent_channel_id is null
+        group by channels.id
+    ) event_count
+    on comment_count.id = event_count.id
+    """
+    res = ActiveRecord::Base.connection.select_all(sql)
+    logger.debug(res.to_a)
+    @result = Hash.new
+    @result["channels"] = res.to_a
+    respond_to do |format|
+      format.json { render json: @result, status: :ok}
+    end
   end
 
   # GET /channels/1
   # GET /channels/1.json
+  # author Hosoda
   def show
+    respond_to do |format|
+      begin
+        @channel = Channel.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        format.json { render json: :not_found, status: :not_found }
+      end
+        format.json {render :info, status: :ok, location: @channel}
+    end
   end
 
   # GET /channels/new
@@ -23,16 +55,15 @@ class ChannelsController < ApplicationController
 
   # POST /channels
   # POST /channels.json
+  # author yusuke otsuki
+  # fixed by hosoda
   def create
     @channel = Channel.new(channel_params)
-
     respond_to do |format|
       if @channel.save
-        format.html { redirect_to @channel, notice: 'Channel was successfully created.' }
-        format.json { render :show, status: :created, location: @channel }
+        format.json { render :show, status: :created, location: @channel}
       else
-        format.html { render :new }
-        format.json { render json: @channel.errors, status: :unprocessable_entity }
+        format.json { render json: @channel.errors, status: :unprocessable_entity}
       end
     end
   end
@@ -69,6 +100,6 @@ class ChannelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.require(:channel).permit(:name, :abstract)
+      params.require(:channel).permit(:name, :abstract, :parent_channel_id, :parent_comment_id)
     end
 end
