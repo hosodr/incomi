@@ -1,6 +1,10 @@
 <template>
   <b-sidebar v-if="messages" id="thread-sidebar-backdrop" title="Thread" right>
-    <Message :message="rootMessage" :repliable="false" />
+    <Message
+      :message="rootMessage"
+      :repliable="false"
+      :set-root-message="setRootMessage"
+    />
     <p class="text-muted m-0 text-center">{{ messages.length }} replies</p>
     <MessageList :messages="messages" :repliable="false" />
     <SubmitBar
